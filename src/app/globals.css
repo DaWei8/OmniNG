@@ -8,8 +8,11 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-outfit);
-  --font-mono: var(--font-outfit-mono);
+  --font-sans: var(--font-urbanist);
+}
+
+body {
+  font-family: Urbanist, Helvetica, sans-serif;
 }
 
 @media (prefers-color-scheme: dark) {

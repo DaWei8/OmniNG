@@ -1,10 +1,11 @@
 "use client";
 
 import React, { useState } from 'react';
-import { newsData, NewsCategory, NewsItem } from '@/data/newsData'; // Adjust path if needed
+import { newsData, NewsCategory, NewsItem } from '@/data/newsData';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Filter, Calendar, Clock, Globe, Shield, TrendingUp, Landmark, Zap, BookOpen } from 'lucide-react';
 import clsx from 'clsx';
+import Link from 'next/link';
 
 const categories: (NewsCategory | 'All')[] = [
     'All',
@@ -57,17 +58,14 @@ export default function NewsPage() {
     return (
         <div className="min-h-screen bg-zinc-50 dark:bg-black text-zinc-900 dark:text-white pb-20">
             {/* Header */}
-            <div className="relative bg-zinc-900 py-20 px-4 overflow-hidden">
-                <div className="absolute inset-0 bg-blue-600/10" />
+            <div className="relative bg-zinc-950 pt-20 pb-14 px-4 overflow-hidden">
+                <div className="absolute inset-0 bg-blue-950/50" />
                 <div className="absolute -top-24 -right-24 w-96 h-96 bg-green-500/20 rounded-full blur-3xl opacity-50" />
                 <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl opacity-50" />
 
-                <div className="max-w-7xl mx-auto relative z-10">
+                <div className="max-w-5xl xl:max-w-7xl mx-auto relative z-10">
                     <h1 className="text-4xl md:text-6xl font-black text-white mb-6 tracking-tight">
-                        What's Happening
-                        <span className="block text-transparent bg-clip-text bg-linear-to-r from-green-400 to-blue-500">
-                            In Nigeria
-                        </span>
+                        What's Happening In Nigeria
                     </h1>
                     <p className="text-xl text-zinc-400 max-w-2xl">
                         Stay informed with the latest updates across economics, politics, security, and technology.
@@ -84,31 +82,30 @@ export default function NewsPage() {
                         />
                         <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-white/50 w-5 h-5" />
                     </div>
+
+                    <div className="my-4 overflow-x-auto py-0.5 scrollbar-hide">
+                        <div className="flex gap-2">
+                            {categories.map((category) => (
+                                <button
+                                    key={category}
+                                    onClick={() => setActiveCategory(category)}
+                                    className={clsx(
+                                        "px-4 py-2 rounded-lg text-sm font-semibold whitespace-nowrap transition-all duration-300",
+                                        activeCategory === category
+                                            ? "bg-green-600 dark:bg-white text-white dark:text-black shadow-lg scale-105"
+                                            : "bg-white dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-700 border border-zinc-200 dark:border-zinc-700"
+                                    )}
+                                >
+                                    {category}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
                 </div>
             </div>
 
             {/* Main Content */}
-            <main className="max-w-7xl mx-auto px-4 -mt-8 relative z-20">
-                {/* Filter Bar */}
-                <div className="mb-10 overflow-x-auto pb-4 scrollbar-hide">
-                    <div className="flex gap-2">
-                        {categories.map((category) => (
-                            <button
-                                key={category}
-                                onClick={() => setActiveCategory(category)}
-                                className={clsx(
-                                    "px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap transition-all duration-300",
-                                    activeCategory === category
-                                        ? "bg-zinc-900 dark:bg-white text-white dark:text-black shadow-lg scale-105"
-                                        : "bg-white dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-700 border border-zinc-200 dark:border-zinc-700"
-                                )}
-                            >
-                                {category}
-                            </button>
-                        ))}
-                    </div>
-                </div>
-
+            <main className="max-w-5xl xl:max-w-7xl pt-6 mx-auto relative ">
                 {/* News Grid */}
                 <motion.div
                     layout
@@ -118,46 +115,47 @@ export default function NewsPage() {
                         {filteredNews.map((item) => {
                             const Icon = categoryIcons[item.category] || BookOpen;
                             return (
-                                <motion.div
-                                    layout
-                                    key={item.id}
-                                    initial={{ opacity: 0, scale: 0.9 }}
-                                    animate={{ opacity: 1, scale: 1 }}
-                                    exit={{ opacity: 0, scale: 0.9 }}
-                                    transition={{ duration: 0.2 }}
-                                    className="group bg-white dark:bg-zinc-900 rounded-2xl p-6 border border-zinc-100 dark:border-zinc-800 hover:shadow-xl dark:hover:shadow-zinc-900/50 hover:border-zinc-200 dark:hover:border-zinc-700 transition-all duration-300 cursor-pointer flex flex-col h-full"
-                                >
-                                    <div className="flex justify-between items-start mb-4">
-                                        <span className={clsx(
-                                            "px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider",
-                                            categoryColors[item.category]
-                                        )}>
-                                            {item.category}
-                                        </span>
-                                        <div className="p-2 rounded-full bg-zinc-50 dark:bg-zinc-800 group-hover:scale-110 transition-transform">
-                                            <Icon className="w-4 h-4 text-zinc-400 dark:text-zinc-500" />
+                                <Link href={`/news/${item.id}`} key={item.id} className="block h-full">
+                                    <motion.div
+                                        layout
+                                        initial={{ opacity: 0, scale: 0.9 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        exit={{ opacity: 0, scale: 0.9 }}
+                                        transition={{ duration: 0.2 }}
+                                        className="group bg-white dark:bg-zinc-900 rounded-2xl p-6 border border-zinc-100 dark:border-zinc-800 hover:shadow-xl dark:hover:shadow-zinc-900/50 hover:border-zinc-200 dark:hover:border-zinc-700 transition-all duration-300 cursor-pointer flex flex-col h-full"
+                                    >
+                                        <div className="flex justify-between items-start mb-4">
+                                            <span className={clsx(
+                                                "px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider",
+                                                categoryColors[item.category]
+                                            )}>
+                                                {item.category}
+                                            </span>
+                                            <div className="p-2 rounded-full bg-zinc-50 dark:bg-zinc-800 group-hover:scale-110 transition-transform">
+                                                <Icon className="w-4 h-4 text-zinc-400 dark:text-zinc-500" />
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <h3 className="text-xl font-bold text-zinc-900 dark:text-white mb-3 leading-tight group-hover:text-green-600 dark:group-hover:text-green-500 transition-colors">
-                                        {item.title}
-                                    </h3>
+                                        <h3 className="text-xl font-bold text-zinc-900 dark:text-white mb-3 leading-tight group-hover:text-green-600 dark:group-hover:text-green-500 transition-colors">
+                                            {item.title}
+                                        </h3>
 
-                                    <p className="text-zinc-600 dark:text-zinc-400 text-sm leading-relaxed mb-6 grow">
-                                        {item.summary}
-                                    </p>
+                                        <p className="text-zinc-600 dark:text-zinc-400 text-sm leading-relaxed mb-6 grow">
+                                            {item.summary}
+                                        </p>
 
-                                    <div className="mt-auto pt-4 border-t border-zinc-100 dark:border-zinc-800 flex items-center justify-between text-xs text-zinc-500 font-medium">
-                                        <div className="flex items-center gap-2">
-                                            <Calendar className="w-3.5 h-3.5" />
-                                            {item.date}
+                                        <div className="mt-auto pt-4 border-t border-zinc-100 dark:border-zinc-800 flex items-center justify-between text-xs text-zinc-500 font-medium">
+                                            <div className="flex items-center gap-2">
+                                                <Calendar className="w-3.5 h-3.5" />
+                                                {item.date}
+                                            </div>
+                                            <div className="flex items-center gap-2">
+                                                <Clock className="w-3.5 h-3.5" />
+                                                {item.readTime || '3 min read'}
+                                            </div>
                                         </div>
-                                        <div className="flex items-center gap-2">
-                                            <Clock className="w-3.5 h-3.5" />
-                                            {item.readTime || '3 min read'}
-                                        </div>
-                                    </div>
-                                </motion.div>
+                                    </motion.div>
+                                </Link>
                             )
                         })}
                     </AnimatePresence>

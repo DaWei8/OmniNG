@@ -17,6 +17,8 @@ interface StateData {
 
 interface NigeriaMapProps {
     className?: string;
+    onStateClick?: (stateId: string) => void;
+    disableModal?: boolean;
 }
 
 const zoneColors: Record<string, string> = {
@@ -26,17 +28,15 @@ const zoneColors: Record<string, string> = {
     "South West": "#84cc16", // lime-500
     "South East": "#65a30d", // lime-600
     "South South": "#0d9488", // teal-600
-    "Unknown": "#15803d", // green-700
 };
 
-export default function NigeriaMap({ className }: NigeriaMapProps) {
+export default function NigeriaMap({ className, onStateClick, disableModal = false }: NigeriaMapProps) {
     const [selectedState, setSelectedState] = useState<StateData | null>(null);
     const [hoveredState, setHoveredState] = useState<string | null>(null);
     const [labelPositions, setLabelPositions] = useState<Record<string, { x: number; y: number }>>({});
     const pathRefs = useRef<Record<string, SVGPathElement | null>>({});
 
     useEffect(() => {
-        // Calculate the center of each state path for label placement
         const timer = setTimeout(() => {
             const positions: Record<string, { x: number; y: number }> = {};
             let hasUpdates = false;
@@ -59,17 +59,26 @@ export default function NigeriaMap({ className }: NigeriaMapProps) {
             if (hasUpdates) {
                 setLabelPositions(positions);
             }
-        }, 100); // Small delay to ensure SVG rendering
+        }, 100);
 
         return () => clearTimeout(timer);
     }, []);
 
+    const handleStateClick = (location: StateData) => {
+        if (onStateClick) {
+            onStateClick(location.id);
+        }
+        if (!disableModal) {
+            setSelectedState(location);
+        }
+    };
+
     return (
-        <div className={clsx("relative w-full max-w-4xl mx-auto p-4", className)}>
-            <div className="relative aspect-[1.2] w-full bg-blue-50/30 dark:bg-blue-900/10 rounded-3xl overflow-hidden shadow-inner">
+        <div className={clsx("w-full relative", className)}>
+            <div className="relative w-full h-full rounded-3xl">
                 <svg
                     viewBox={nigeria.viewBox}
-                    className="w-full h-full drop-shadow-2xl filter"
+                    className="w-full h-full overflow-visible drop-shadow-2xl filter"
                     aria-label="Map of Nigeria"
                 >
                     <defs>
@@ -80,7 +89,7 @@ export default function NigeriaMap({ className }: NigeriaMapProps) {
                     </defs>
                     {nigeria.locations.map((location: StateData) => {
                         const stateDetails = getStateData(location.id);
-                        const baseColor = zoneColors[stateDetails.zone] || zoneColors["Unknown"];
+                        const baseColor = zoneColors[stateDetails.zone] || zoneColors["North Central"];
 
                         return (
                             <motion.path
@@ -95,17 +104,17 @@ export default function NigeriaMap({ className }: NigeriaMapProps) {
                                 animate={{
                                     fill:
                                         selectedState?.id === location.id
-                                            ? "#eab308" // Yellow-500 for selection
+                                            ? "#eab308"
                                             : hoveredState === location.id
-                                                ? "#facc15" // Yellow-400 for hover
+                                                ? "#facc15"
                                                 : baseColor,
                                     scale: hoveredState === location.id ? 1.02 : 1,
                                     zIndex: hoveredState === location.id ? 10 : 1,
                                     strokeWidth: hoveredState === location.id ? 2 : 1,
                                 }}
                                 transition={{ duration: 0.3, ease: "easeInOut" }}
-                                className="cursor-pointer hover:scale-110 hover:transform-3d hover:rotate-1 hover:shadow-2xl outline-none"
-                                onClick={() => setSelectedState(location)}
+                                className="cursor-pointer hover:transform-3d hover:shadow-2xl outline-none"
+                                onClick={() => handleStateClick(location)}
                                 onMouseEnter={() => setHoveredState(location.id)}
                                 onMouseLeave={() => setHoveredState(null)}
                                 style={{
@@ -118,7 +127,6 @@ export default function NigeriaMap({ className }: NigeriaMapProps) {
                     {/* State Labels */}
                     {Object.entries(labelPositions).map(([id, pos]) => {
                         const location = nigeria.locations.find((l: StateData) => l.id === id);
-                        console.log(id);
                         const labelPosition = statePosition[id];
                         if (!location) return null;
 
@@ -129,10 +137,12 @@ export default function NigeriaMap({ className }: NigeriaMapProps) {
                                 y={pos.y}
                                 textAnchor="middle"
                                 dominantBaseline="middle"
-                                className={`pointer-events-none text-[6px] fill-white font-bold drop-shadow-md select-none ${labelPosition}`}
+                                className={`fill-zinc-950 pointer-events-none text-zinc-950 drop-shadow-md ${labelPosition}`}
                                 style={{
                                     textShadow: '0px 1px 2px rgba(0,0,0,0.5)',
-                                    opacity: 0.9
+                                    opacity: 0.9,
+                                    fontSize: hoveredState === id ? "12px" : "7px",
+                                    fontWeight: hoveredState === id ? "bold" : "normal"
                                 }}
                             >
                                 {location.name === "Federal Capital Territory" ? "Abuja" : location.name}
@@ -162,11 +172,11 @@ export default function NigeriaMap({ className }: NigeriaMapProps) {
             </div>
 
             {/* Legend Section */}
-            <div className="mt-8 bg-white dark:bg-zinc-900 rounded-2xl p-6 shadow-sm border border-zinc-200 dark:border-zinc-800">
+            <div className="absolute bottom-0 right-0 xl:right-10 scale-75 xl:scale-100 bg-white dark:bg-zinc-900 rounded-2xl p-6 shadow-sm border border-zinc-200 dark:border-zinc-800">
                 <h3 className="text-lg font-semibold text-zinc-800 dark:text-zinc-100 mb-4">
                     Key to Geopolitical Zones
                 </h3>
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-2 gap-4">
                     {Object.entries(zoneColors).map(([zone, color]) => (
                         <div key={zone} className="flex items-center space-x-3 group cursor-default">
                             <div

@@ -76,7 +76,7 @@ export interface StateDetails {
 
 const getZone = (id: string): string => {
     const zones: Record<string, string[]> = {
-        "North Central": ["benue", "kogi", "kwara", "nasarawa", "niger", "plateau", "fct"],
+        "North Central": ["benue", "kogi", "kwara", "nassarawa", "niger", "plateau", "fct"],
         "North East": ["adamawa", "bauchi", "borno", "gombe", "taraba", "yobe"],
         "North West": ["jigawa", "kaduna", "kano", "katsina", "kebbi", "sokoto", "zamfara"],
         "South East": ["abia", "anambra", "ebonyi", "enugu", "imo"],
@@ -1288,10 +1288,10 @@ export const nigeriaStatesData: Record<string, StateDetails> = {
             publicServiceIndex: "Low (Rural)",
         },
     },
-    nasarawa: {
+    nassarawa: {
         developments: [],
-        id: "nasarawa",
-        name: "Nasarawa",
+        id: "nassarawa",
+        name: "Nassarawa",
         zone: "North Central",
         capital: "Lafia",
         population: "2,632,239 (2019 est.)",
@@ -1998,6 +1998,7 @@ export const statePosition: { [key: string]: string } = {
     delta: "translate-y-4 translate-x-4",
     rivers: "-translate-x-3",
     abia: "-translate-y-3",
+    adamawa: "-translate-y-5 -translate-x-2",
     crossRiver: "translate-y-2 -translate-x-7",
     kaduna: "-translate-y-2 translate-x-7",
     katsina: "-translate-y-2 -translate-x-7",
