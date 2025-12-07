@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community Forum - Nigeria Transparency Platform</title>
+    <meta name="description" content="Share ideas, discuss solutions, and collaborate on community initiatives for Nigeria's development. Citizen-powered problem solving platform.">
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- Core Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.12/typed.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'forest': '#1B4332',
+                        'earth': '#D4A574',
+                        'terracotta': '#A0522D',
+                        'charcoal': '#2D3748'
+                    },
+                    fontFamily: {
+                        'display': ['Playfair Display', 'serif'],
+                        'body': ['Inter', 'sans-serif'],
+                        'mono': ['JetBrains Mono', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        .hero-bg {
+            background: linear-gradient(135deg, rgba(27, 67, 50, 0.95), rgba(160, 82, 45, 0.9)), url('resources/community-engagement.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .idea-card {
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        
+        .idea-card.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .idea-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+        }
+        
+        .vote-btn {
+            transition: all 0.2s ease;
+        }
+        
+        .vote-btn:hover {
+            transform: scale(1.05);
+        }
+        
+        .vote-btn:active {
+            transform: scale(0.95);
+        }
+        
+        .category-tag {
+            background: linear-gradient(135deg, #1B4332, #D4A574);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .nav-link {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #D4A574;
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        .reveal-up {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        
+        .reveal-up.revealed {
+            opacity: 1;
+            transform: translateY(0);
+            transition: all 0.6s ease;
+        }
+        
+        .floating-action {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 40;
+            background: linear-gradient(135deg, #1B4332, #D4A574);
+            color: white;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .floating-action:hover {
+            transform: scale(1.1);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.3);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-body">
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full bg-white/90 backdrop-blur-md border-b border-gray-200 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center space-x-2">
+                        <div class="w-8 h-8 bg-forest rounded-lg flex items-center justify-center">
+                            <span class="text-white font-bold text-sm">NPT</span>
+                        </div>
+                        <span class="font-display font-bold text-xl text-forest">Nigeria Transparency</span>
+                    </div>
+                </div>
+                
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="index.html" class="nav-link text-gray-600 hover:text-forest font-medium">Dashboard</a>
+                    <a href="officials.html" class="nav-link text-gray-600 hover:text-forest font-medium">Officials</a>
+                    <a href="forum.html" class="nav-link text-forest font-medium">Community</a>
+                    <a href="leaderboard.html" class="nav-link text-gray-600 hover:text-forest font-medium">Rankings</a>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <div class="relative">
+                        <input type="text" id="idea-search" placeholder="Search ideas..." 
+                               class="w-64 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:border-transparent">
+                        <button class="absolute right-2 top-2 text-gray-400 hover:text-forest">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <button class="bg-forest text-white px-4 py-2 rounded-lg hover:bg-opacity-90 transition-all">
+                        Sign In
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-bg pt-24 pb-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center text-white">
+                <h1 class="font-display text-5xl font-bold mb-6">Community Solutions Forum</h1>
+                <p class="text-xl mb-8 max-w-3xl mx-auto text-gray-200">
+                    Share ideas, discuss solutions, and collaborate on initiatives to build stronger communities across Nigeria. 
+                    Your voice matters in shaping our nation's future.
+                </p>
+                <div class="flex justify-center space-x-4">
+                    <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4">
+                        <div class="text-2xl font-bold">2,847</div>
+                        <div class="text-sm text-gray-300">Active Ideas</div>
+                    </div>
+                    <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4">
+                        <div class="text-2xl font-bold">15,632</div>
+                        <div class="text-sm text-gray-300">Citizen Votes</div>
+                    </div>
+                    <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4">
+                        <div class="text-2xl font-bold">892</div>
+                        <div class="text-sm text-gray-300">Implemented</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Submit Idea Button -->
+    <button id="submit-idea-fab" class="floating-action">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+        </svg>
+    </button>
+
+    <!-- Idea Submission Modal -->
+    <div id="idea-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+        <div class="bg-white rounded-lg max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <div class="p-6 border-b border-gray-200">
+                <div class="flex justify-between items-center">
+                    <h3 class="font-display text-2xl font-bold text-forest">Submit Community Idea</h3>
+                    <button id="close-idea-modal" class="text-gray-400 hover:text-gray-600">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <div class="p-6">
+                <form id="idea-form">
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Idea Title</label>
+                        <input type="text" id="idea-title" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:border-transparent" placeholder="Enter a clear, descriptive title for your idea">
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                        <select id="idea-category" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:border-transparent">
+                            <option value="">Select a category</option>
+                            <option value="Infrastructure">Infrastructure</option>
+                            <option value="Education">Education</option>
+                            <option value="Healthcare">Healthcare</option>
+                            <option value="Agriculture">Agriculture</option>
+                            <option value="Technology">Technology</option>
+                            <option value="Environment">Environment</option>
+                            <option value="Security">Security</option>
+                            <option value="Economy">Economy</option>
+                            <option value="Youth Empowerment">Youth Empowerment</option>
+                            <option value="Women Development">Women Development</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">State/Region</label>
+                        <select id="idea-state" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:border-transparent">
+                            <option value="">Select your state</option>
+                            <option value="Abia">Abia</option>
+                            <option value="Adamawa">Adamawa</option>
+                            <option value="Akwa Ibom">Akwa Ibom</option>
+                            <option value="Anambra">Anambra</option>
+                            <option value="Bauchi">Bauchi</option>
+                            <option value="Bayelsa">Bayelsa</option>
+                            <option value="Benue">Benue</option>
+                            <option value="Borno">Borno</option>
+                            <option value="Cross River">Cross River</option>
+                            <option value="Delta">Delta</option>
+                            <option value="Ebonyi">Ebonyi</option>
+                            <option value="Edo">Edo</option>
+                            <option value="Ekiti">Ekiti</option>
+                            <option value="Enugu">Enugu</option>
+                            <option value="FCT">FCT</option>
+                            <option value="Gombe">Gombe</option>
+                            <option value="Imo">Imo</option>
+                            <option value="Jigawa">Jigawa</option>
+                            <option value="Kaduna">Kaduna</option>
+                            <option value="Kano">Kano</option>
+                            <option value="Katsina">Katsina</option>
+                            <option value="Kebbi">Kebbi</option>
+                            <option value="Kogi">Kogi</option>
+                            <option value="Kwara">Kwara</option>
+                            <option value="Lagos">Lagos</option>
+                            <option value="Nasarawa">Nasarawa</option>
+                            <option value="Niger">Niger</option>
+                            <option value="Ogun">Ogun</option>
+                            <option value="Ondo">Ondo</option>
+                            <option value="Osun">Osun</option>
+                            <option value="Oyo">Oyo</option>
+                            <option value="Plateau">Plateau</option>
+                            <option value="Rivers">Rivers</option>
+                            <option value="Sokoto">Sokoto</option>
+                            <option value="Taraba">Taraba</option>
+                            <option value="Yobe">Yobe</option>
+                            <option value="Zamfara">Zamfara</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Detailed Description</label>
+                        <textarea id="idea-description" rows="6" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:border-transparent" placeholder="Describe your idea in detail. Explain the problem it solves, how it will be implemented, and the expected impact on the community."></textarea>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Implementation Steps (Optional)</label>
+                        <textarea id="idea-steps" rows="4" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:border-transparent" placeholder="Outline the steps needed to implement this idea..."></textarea>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Estimated Budget (Optional)</label>
+                        <input type="number" id="idea-budget" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:border-transparent" placeholder="Estimated budget in Naira">
+                    </div>
+                    
+                    <div class="flex space-x-4">
+                        <button type="button" id="cancel-idea" class="flex-1 bg-gray-200 text-gray-800 py-3 px-6 rounded-lg hover:bg-gray-300 transition-colors">
+                            Cancel
+                        </button>
+                        <button type="submit" class="flex-1 bg-forest text-white py-3 px-6 rounded-lg hover:bg-opacity-90 transition-colors">
+                            Submit Idea
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters and Categories -->
+    <section class="py-8 bg-white border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
+                <div class="flex flex-wrap gap-2">
+                    <button class="category-filter active px-4 py-2 rounded-lg border border-gray-300 text-sm font-medium" data-category="all">
+                        All Ideas
+                    </button>
+                    <button class="category-filter px-4 py-2 rounded-lg border border-gray-300 text-sm font-medium" data-category="Infrastructure">
+                        Infrastructure
+                    </button>
+                    <button class="category-filter px-4 py-2 rounded-lg border border-gray-300 text-sm font-medium" data-category="Education">
+                        Education
+                    </button>
+                    <button class="category-filter px-4 py-2 rounded-lg border border-gray-300 text-sm font-medium" data-category="Healthcare">
+                        Healthcare
+                    </button>
+                    <button class="category-filter px-4 py-2 rounded-lg border border-gray-300 text-sm font-medium" data-category="Agriculture">
+                        Agriculture
+                    </button>
+                    <button class="category-filter px-4 py-2 rounded-lg border border-gray-300 text-sm font-medium" data-category="Technology">
+                        Technology
+                    </button>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <select id="state-filter" class="px-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-forest focus:border-transparent">
+                        <option value="">All States</option>
+                        <option value="Lagos">Lagos</option>
+                        <option value="Kano">Kano</option>
+                        <option value="Rivers">Rivers</option>
+                        <option value="Anambra">Anambra</option>
+                        <option value="Oyo">Oyo</option>
+                    </select>
+                    
+                    <select id="sort-filter" class="px-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-forest focus:border-transparent">
+                        <option value="popular">Most Popular</option>
+                        <option value="recent">Most Recent</option>
+                        <option value="trending">Trending</option>
+                        <option value="controversial">Controversial</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Ideas -->
+    <section class="py-12 bg-gradient-to-r from-forest to-earth">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center text-white mb-12">
+                <h2 class="font-display text-3xl font-bold mb-4">Featured Community Solutions</h2>
+                <p class="text-xl text-gray-200">Top-rated ideas making real impact in communities</p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-white p-6 rounded-lg border border-gray-200 reveal-up">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="category-tag">Infrastructure</span>
+                        <div class="text-right">
+                            <div class="text-2xl font-bold text-forest">1,247</div>
+                            <div class="text-xs text-gray-500">votes</div>
+                        </div>
+                    </div>
+                    <h3 class="font-semibold text-forest text-lg mb-3">Solar Street Lighting Initiative</h3>
+                    <p class="text-gray-700 text-sm mb-4">
+                        Install solar-powered street lights in rural communities to improve security and extend economic activities into the evening hours.
+                    </p>
+                    <div class="flex items-center justify-between text-sm text-gray-500">
+                        <span>Lagos State</span>
+                        <span>Implemented ✓</span>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-6 rounded-lg border border-gray-200 reveal-up">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="category-tag">Education</span>
+                        <div class="text-right">
+                            <div class="text-2xl font-bold text-forest">892</div>
+                            <div class="text-xs text-gray-500">votes</div>
+                        </div>
+                    </div>
+                    <h3 class="font-semibold text-forest text-lg mb-3">Mobile Learning Centers</h3>
+                    <p class="text-gray-700 text-sm mb-4">
+                        Deploy mobile classrooms to reach remote areas with limited access to educational facilities, equipped with digital learning tools.
+                    </p>
+                    <div class="flex items-center justify-between text-sm text-gray-500">
+                        <span>Kano State</span>
+                        <span>In Progress</span>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-6 rounded-lg border border-gray-200 reveal-up">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="category-tag">Healthcare</span>
+                        <div class="text-right">
+                            <div class="text-2xl font-bold text-forest">634</div>
+                            <div class="text-xs text-gray-500">votes</div>
+                        </div>
+                    </div>
+                    <h3 class="font-semibold text-forest text-lg mb-3">Community Health Insurance</h3>
+                    <p class="text-gray-700 text-sm mb-4">
+                        Establish affordable community-based health insurance schemes for informal sector workers and rural populations.
+                    </p>
+                    <div class="flex items-center justify-between text-sm text-gray-500">
+                        <span>Anambra State</span>
+                        <span>Under Review</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Community Ideas -->
+    <section class="py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-4 gap-8">
+                <!-- Sidebar -->
+                <div class="lg:col-span-1">
+                    <div class="bg-white p-6 rounded-lg border border-gray-200 mb-6">
+                        <h3 class="font-semibold text-forest mb-4">Community Stats</h3>
+                        <div class="space-y-3">
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Total Ideas</span>
+                                <span class="font-medium">2,847</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Implemented</span>
+                                <span class="font-medium text-green-600">892</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">In Progress</span>
+                                <span class="font-medium text-blue-600">1,203</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Under Review</span>
+                                <span class="font-medium text-yellow-600">752</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white p-6 rounded-lg border border-gray-200">
+                        <h3 class="font-semibold text-forest mb-4">Top Contributors</h3>
+                        <div class="space-y-3">
+                            <div class="flex items-center space-x-3">
+                                <img src="resources/community-engagement.jpg" alt="Contributor" class="w-8 h-8 rounded-full object-cover">
+                                <div class="flex-1">
+                                    <div class="font-medium text-sm">Adebayo Oluwaseun</div>
+                                    <div class="text-xs text-gray-500">47 ideas</div>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <img src="resources/states-network.jpg" alt="Contributor" class="w-8 h-8 rounded-full object-cover">
+                                <div class="flex-1">
+                                    <div class="font-medium text-sm">Fatima Abdullahi</div>
+                                    <div class="text-xs text-gray-500">32 ideas</div>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <img src="resources/transparency-concept.jpg" alt="Contributor" class="w-8 h-8 rounded-full object-cover">
+                                <div class="flex-1">
+                                    <div class="font-medium text-sm">Dr. Chinyere Nwosu</div>
+                                    <div class="text-xs text-gray-500">28 ideas</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Main Content -->
+                <div class="lg:col-span-3">
+                    <div id="ideas-container" class="space-y-6">
+                        <!-- Ideas will be dynamically loaded here -->
+                    </div>
+                    
+                    <div id="loading-indicator" class="text-center py-12 hidden">
+                        <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-forest"></div>
+                        <p class="mt-4 text-gray-600">Loading ideas...</p>
+                    </div>
+                    
+                    <div id="no-results" class="text-center py-12 hidden">
+                        <div class="text-gray-400 mb-4">
+                            <svg class="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-600 mb-2">No ideas found</h3>
+                        <p class="text-gray-500">Try adjusting your filters or be the first to submit an idea!</p>
+                    </div>
+                    
+                    <div class="text-center mt-12">
+                        <button id="load-more" class="bg-forest text-white px-8 py-3 rounded-lg hover:bg-opacity-90 transition-colors">
+                            Load More Ideas
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Success Stories -->
+    <section class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12 reveal-up">
+                <h2 class="font-display text-4xl font-bold text-forest mb-4">Success Stories</h2>
+                <p class="text-xl text-gray-600">Community ideas that became reality</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-lg border border-green-200 reveal-up">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center mr-4">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-green-800">Rural Water Project</h3>
+                            <p class="text-sm text-green-600">Borno State</p>
+                        </div>
+                    </div>
+                    <p class="text-green-700 text-sm mb-4">
+                        Community-proposed borehole project now provides clean water to 15 villages, reducing waterborne diseases by 60%.
+                    </p>
+                    <div class="text-xs text-green-600">Implemented in 8 months • 1,247 beneficiaries</div>
+                </div>
+                
+                <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-lg border border-blue-200 reveal-up">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center mr-4">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-blue-800">Youth Coding Academy</h3>
+                            <p class="text-sm text-blue-600">Lagos State</p>
+                        </div>
+                    </div>
+                    <p class="text-blue-700 text-sm mb-4">
+                        Free coding bootcamp for underprivileged youth has trained 500+ students, with 70% now employed in tech.
+                    </p>
+                    <div class="text-xs text-blue-600">Running for 2 years • 89% completion rate</div>
+                </div>
+                
+                <div class="bg-gradient-to-br from-purple-50 to-purple-100 p-6 rounded-lg border border-purple-200 reveal-up">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center mr-4">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-purple-800">Women Cooperative</h3>
+                            <p class="text-sm text-purple-600">Oyo State</p>
+                        </div>
+                    </div>
+                    <p class="text-purple-700 text-sm mb-4">
+                        Women-led farming cooperative increased member incomes by 150% through shared resources and market access.
+                    </p>
+                    <div class="text-xs text-purple-600">1 year running • 200+ members</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-forest text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <div class="flex items-center justify-center space-x-2 mb-4">
+                    <div class="w-8 h-8 bg-earth rounded-lg flex items-center justify-center">
+                        <span class="text-forest font-bold text-sm">NPT</span>
+                    </div>
+                    <span class="font-display font-bold text-xl">Nigeria Transparency Platform</span>
+                </div>
+                <p class="text-gray-300 mb-6 max-w-2xl mx-auto">
+                    Empowering Nigerian citizens with transparent political information, fostering democratic accountability, 
+                    and enabling community-driven solutions for national development.
+                </p>
+                <div class="border-t border-gray-600 pt-6">
+                    <p class="text-gray-400 text-sm">
+                        © 2024 Nigeria Political Transparency Platform. Built for democratic accountability and citizen engagement.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="main.js"></script>
+    <script>
+        // Initialize forum page specific functionality
+        document.addEventListener('DOMContentLoaded', () => {
+            initForumPage();
+        });
+        
+        function initForumPage() {
+            // Initialize modal functionality
+            initIdeaModal();
+            
+            // Initialize filters
+            initForumFilters();
+            
+            // Initialize search
+            initForumSearch();
+            
+            // Load initial ideas
+            loadCommunityIdeas();
+        }
+        
+        function initIdeaModal() {
+            const fab = document.getElementById('submit-idea-fab');
+            const modal = document.getElementById('idea-modal');
+            const closeBtn = document.getElementById('close-idea-modal');
+            const cancelBtn = document.getElementById('cancel-idea');
+            const form = document.getElementById('idea-form');
+            
+            function openModal() {
+                modal.classList.remove('hidden');
+                anime({
+                    targets: modal.querySelector('.bg-white'),
+                    scale: [0.8, 1],
+                    opacity: [0, 1],
+                    duration: 300,
+                    easing: 'easeOutBack'
+                });
+            }
+            
+            function closeModal() {
+                modal.classList.add('hidden');
+            }
+            
+            fab.addEventListener('click', openModal);
+            closeBtn.addEventListener('click', closeModal);
+            cancelBtn.addEventListener('click', closeModal);
+            
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) closeModal();
+            });
+            
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                submitIdea();
+                closeModal();
+            });
+        }
+        
+        function submitIdea() {
+            const title = document.getElementById('idea-title').value;
+            const category = document.getElementById('idea-category').value;
+            const state = document.getElementById('idea-state').value;
+            const description = document.getElementById('idea-description').value;
+            
+            // Simulate idea submission
+            console.log('Submitting idea:', { title, category, state, description });
+            
+            // Show success message
+            const toast = document.createElement('div');
+            toast.className = 'fixed top-20 right-4 bg-green-500 text-white px-6 py-3 rounded-lg z-50';
+            toast.textContent = 'Idea submitted successfully! It will be reviewed and published soon.';
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                document.body.removeChild(toast);
+            }, 4000);
+            
+            // Clear form
+            document.getElementById('idea-form').reset();
+        }
+        
+        function initForumFilters() {
+            const categoryFilters = document.querySelectorAll('.category-filter');
+            const stateFilter = document.getElementById('state-filter');
+            const sortFilter = document.getElementById('sort-filter');
+            
+            categoryFilters.forEach(filter => {
+                filter.addEventListener('click', () => {
+                    categoryFilters.forEach(f => f.classList.remove('active'));
+                    filter.classList.add('active');
+                    loadCommunityIdeas();
+                });
+            });
+            
+            [stateFilter, sortFilter].forEach(filter => {
+                filter.addEventListener('change', loadCommunityIdeas);
+            });
+        }
+        
+        function initForumSearch() {
+            const searchInput = document.getElementById('idea-search');
+            let searchTimeout;
+            
+            searchInput.addEventListener('input', () => {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(() => {
+                    loadCommunityIdeas();
+                }, 300);
+            });
+        }
+        
+        function loadCommunityIdeas() {
+            const container = document.getElementById('ideas-container');
+            const loading = document.getElementById('loading-indicator');
+            const noResults = document.getElementById('no-results');
+            
+            // Show loading
+            loading.classList.remove('hidden');
+            noResults.classList.add('hidden');
+            container.innerHTML = '';
+            
+            // Simulate API call delay
+            setTimeout(() => {
+                loading.classList.add('hidden');
+                
+                // Get filter values
+                const activeCategory = document.querySelector('.category-filter.active').dataset.category;
+                const state = document.getElementById('state-filter').value;
+                const sort = document.getElementById('sort-filter').value;
+                const search = document.getElementById('idea-search').value;
+                
+                // Generate ideas based on filters
+                const ideas = generateFilteredIdeas(activeCategory, state, sort, search);
+                
+                if (ideas.length === 0) {
+                    noResults.classList.remove('hidden');
+                } else {
+                    container.innerHTML = ideas.map(idea => generateIdeaCard(idea)).join('');
+                    
+                    // Animate cards
+                    const cards = document.querySelectorAll('.idea-card');
+                    cards.forEach((card, index) => {
+                        setTimeout(() => {
+                            card.classList.add('revealed');
+                        }, index * 100);
+                    });
+                }
+            }, 800);
+        }
+        
+        function generateFilteredIdeas(category, state, sort, search) {
+            const allIdeas = [
+                {
+                    id: '1',
+                    title: 'Digital Skills Training Centers in Rural Areas',
+                    description: 'Establish community-based digital literacy centers to bridge the technology gap between urban and rural areas, focusing on youth and women empowerment.',
+                    author: 'Adebayo Oluwaseun',
+                    state: 'Oyo',
+                    category: 'Education',
+                    votes: 245,
+                    comments: 32,
+                    timeAgo: '2 days ago',
+                    status: 'Under Review'
+                },
+                {
+                    id: '2',
+                    title: 'Solar-Powered Irrigation Systems for Small Farmers',
+                    description: 'Implement affordable solar irrigation solutions to help small-scale farmers increase crop yields and reduce dependence on seasonal rainfall.',
+                    author: 'Fatima Abdullahi',
+                    state: 'Kano',
+                    category: 'Agriculture',
+                    votes: 189,
+                    comments: 28,
+                    timeAgo: '4 days ago',
+                    status: 'In Progress'
+                },
+                {
+                    id: '3',
+                    title: 'Community Health Insurance Scheme',
+                    description: 'Create a sustainable community-based health insurance program to provide affordable healthcare access for informal sector workers.',
+                    author: 'Dr. Chinyere Nwosu',
+                    state: 'Anambra',
+                    category: 'Healthcare',
+                    votes: 312,
+                    comments: 45,
+                    timeAgo: '1 week ago',
+                    status: 'Under Review'
+                },
+                {
+                    id: '4',
+                    title: 'Waste-to-Energy Community Plants',
+                    description: 'Establish small-scale waste-to-energy plants in urban slums to address waste management while generating electricity for communities.',
+                    author: 'Emeka Okafor',
+                    state: 'Lagos',
+                    category: 'Environment',
+                    votes: 178,
+                    comments: 23,
+                    timeAgo: '2 weeks ago',
+                    status: 'Implemented'
+                },
+                {
+                    id: '5',
+                    title: 'Youth Entrepreneurship Hubs',
+                    description: 'Create physical spaces where young entrepreneurs can access mentorship, funding opportunities, and collaborative workspace.',
+                    author: 'Amina Yusuf',
+                    state: 'Kaduna',
+                    category: 'Youth Empowerment',
+                    votes: 267,
+                    comments: 38,
+                    timeAgo: '2 weeks ago',
+                    status: 'In Progress'
+                },
+                {
+                    id: '6',
+                    title: 'Mobile Medical Clinics for Remote Areas',
+                    description: 'Deploy equipped mobile medical units to serve remote communities with limited access to healthcare facilities.',
+                    author: 'Dr. Ibrahim Suleiman',
+                    state: 'Borno',
+                    category: 'Healthcare',
+                    votes: 198,
+                    comments: 29,
+                    timeAgo: '3 weeks ago',
+                    status: 'Under Review'
+                }
+            ];
+            
+            return allIdeas.filter(idea => {
+                if (category !== 'all' && idea.category !== category) return false;
+                if (state && idea.state !== state) return false;
+                if (search && !idea.title.toLowerCase().includes(search.toLowerCase()) && 
+                    !idea.description.toLowerCase().includes(search.toLowerCase())) return false;
+                return true;
+            });
+        }
+        
+        function generateIdeaCard(idea) {
+            const statusColors = {
+                'Implemented': 'text-green-600',
+                'In Progress': 'text-blue-600',
+                'Under Review': 'text-yellow-600'
+            };
+            
+            return `
+                <div class="idea-card bg-white rounded-lg border border-gray-200 p-6 hover:shadow-lg transition-all duration-300">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="flex-1">
+                            <div class="flex items-center space-x-3 mb-3">
+                                <span class="category-tag">${idea.category}</span>
+                                <span class="text-sm ${statusColors[idea.status] || 'text-gray-600'}">${idea.status}</span>
+                            </div>
+                            <h3 class="font-semibold text-forest text-lg mb-2">${idea.title}</h3>
+                            <p class="text-gray-700 mb-3">${idea.description}</p>
+                            <div class="flex items-center space-x-4 text-sm text-gray-500 mb-3">
+                                <span>👤 ${idea.author}</span>
+                                <span>📍 ${idea.state}</span>
+                                <span>💬 ${idea.comments} comments</span>
+                                <span>⏰ ${idea.timeAgo}</span>
+                            </div>
+                        </div>
+                        <div class="text-center ml-4">
+                            <div class="text-2xl font-bold text-forest">${idea.votes}</div>
+                            <div class="text-xs text-gray-500">votes</div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center justify-between">
+                        <div class="flex space-x-2">
+                            <button class="vote-btn upvote bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm hover:bg-green-200 transition-colors" data-idea-id="${idea.id}" data-vote="up">
+                                👍 Upvote
+                            </button>
+                            <button class="vote-btn downvote bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm hover:bg-red-200 transition-colors" data-idea-id="${idea.id}" data-vote="down">
+                                👎 Downvote
+                            </button>
+                        </div>
+                        <button class="bg-forest text-white px-4 py-2 rounded-lg hover:bg-opacity-90 transition-colors text-sm">
+                            View Details
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>
