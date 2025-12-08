@@ -44,7 +44,7 @@ export default function MapPage() {
         <div className="min-h-screen bg-zinc-50 dark:bg-black text-zinc-900 dark:text-white pb-20">
             <div className="relative bg-zinc-950 pt-20 pb-14 px-4 overflow-hidden">
                 <div className="absolute inset-0 bg-blue-950/50" />
-                <div className="absolute -top-24 -right-24 w-96 h-96 bg-green-500/20 rounded-full blur-3xl opacity-50" />
+                <div className="absolute -top-24 -right-24 w-96 h-96 bg-green-700/20 rounded-full blur-3xl opacity-50" />
                 <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl opacity-50" />
 
                 <div className="max-w-5xl xl:max-w-7xl mx-auto relative z-10">
@@ -64,7 +64,7 @@ export default function MapPage() {
                                     className={clsx(
                                         "px-4 py-2 rounded-lg text-sm font-semibold whitespace-nowrap transition-all",
                                         selectedMetric === cat
-                                            ? "bg-green-600 text-white shadow-lg"
+                                            ? "bg-green-700 text-white shadow-lg"
                                             : "bg-zinc-100/30 dark:bg-zinc-800 text-white hover:text-zinc-800 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-700"
                                     )}
                                 >

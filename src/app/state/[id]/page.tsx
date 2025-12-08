@@ -60,7 +60,7 @@ export default function StatePage() {
     return (
         <div className="min-h-screen bg-zinc-50 dark:bg-black text-zinc-900 dark:text-white font-sans">
             {/* Header Image / Banner */}
-            <div className="relative h-64 md:h-80 bg-linear-to-r from-green-600 to-green-800 overflow-hidden">
+            <div className="relative h-64 md:h-80 bg-linear-to-r from-green-700 to-green-800 overflow-hidden">
                 <div className="absolute inset-0 bg-black/20" />
                 <div className="absolute inset-0 flex items-center justify-center flex-col">
                     <h1 className="text-5xl md:text-7xl font-bold text-white tracking-tighter drop-shadow-lg text-center px-4">
@@ -91,7 +91,7 @@ export default function StatePage() {
                                 <div className="relative w-full aspect-square bg-zinc-100 dark:bg-zinc-800 rounded-2xl p-8 flex items-center justify-center border border-zinc-200 dark:border-zinc-700">
                                     <svg
                                         viewBox={nigeria.viewBox}
-                                        className="w-full h-full relative drop-shadow-lg text-green-600 dark:text-green-500 fill-current"
+                                        className="w-full h-full relative drop-shadow-lg text-green-700 dark:text-green-700 fill-current"
                                     >
                                         <path d={stateShape.path} className='absolute top-1/2 left-1/2 scale-200' stroke="none" />
                                     </svg>

@@ -1,13 +1,13 @@
 "use client";
 
-import React, { useState } from 'react';
-import { newsData, NewsCategory, NewsItem } from '@/data/newsData';
+import { useState } from 'react';
+import { newsData, NewsCategory } from '@/data/newsData';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Filter, Calendar, Clock, Globe, Shield, TrendingUp, Landmark, Zap, BookOpen } from 'lucide-react';
+import { Search, Calendar, Clock, Globe, Shield, TrendingUp, Landmark, Zap, BookOpen } from 'lucide-react';
 import clsx from 'clsx';
 import Link from 'next/link';
 
-const categories: (NewsCategory | 'All')[] = [
+export const categories: (NewsCategory | 'All')[] = [
     'All',
     'Economic',
     'Political',
@@ -20,7 +20,7 @@ const categories: (NewsCategory | 'All')[] = [
     'Entertainment'
 ];
 
-const categoryColors: Record<NewsCategory, string> = {
+export const categoryColors: Record<NewsCategory, string> = {
     'Economic': 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300',
     'Political': 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300',
     'Geopolitical': 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300',
@@ -32,7 +32,7 @@ const categoryColors: Record<NewsCategory, string> = {
     'Entertainment': 'bg-pink-100 text-pink-700 dark:bg-pink-900/30 dark:text-pink-300',
 };
 
-const categoryIcons: Record<NewsCategory, any> = {
+export const categoryIcons: Record<NewsCategory, any> = {
     'Economic': TrendingUp,
     'Political': Landmark,
     'Geopolitical': Globe,
@@ -60,7 +60,7 @@ export default function NewsPage() {
             {/* Header */}
             <div className="relative bg-zinc-950 pt-20 pb-14 px-4 overflow-hidden">
                 <div className="absolute inset-0 bg-blue-950/50" />
-                <div className="absolute -top-24 -right-24 w-96 h-96 bg-green-500/20 rounded-full blur-3xl opacity-50" />
+                <div className="absolute -top-24 -right-24 w-96 h-96 bg-green-700/20 rounded-full blur-3xl opacity-50" />
                 <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl opacity-50" />
 
                 <div className="max-w-5xl xl:max-w-7xl mx-auto relative z-10">
@@ -78,7 +78,7 @@ export default function NewsPage() {
                             placeholder="Search news..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full pl-12 pr-4 py-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/10 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-green-500 transition-all shadow-lg"
+                            className="w-full pl-12 pr-4 py-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/10 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-green-700 transition-all shadow-lg"
                         />
                         <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-white/50 w-5 h-5" />
                     </div>
@@ -92,7 +92,7 @@ export default function NewsPage() {
                                     className={clsx(
                                         "px-4 py-2 rounded-lg text-sm font-semibold whitespace-nowrap transition-all duration-300",
                                         activeCategory === category
-                                            ? "bg-green-600 dark:bg-white text-white dark:text-black shadow-lg scale-105"
+                                            ? "bg-green-700 dark:bg-white text-white dark:text-black shadow-lg scale-105"
                                             : "bg-white dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-700 border border-zinc-200 dark:border-zinc-700"
                                     )}
                                 >
@@ -136,7 +136,7 @@ export default function NewsPage() {
                                             </div>
                                         </div>
 
-                                        <h3 className="text-xl font-bold text-zinc-900 dark:text-white mb-3 leading-tight group-hover:text-green-600 dark:group-hover:text-green-500 transition-colors">
+                                        <h3 className="text-xl font-bold text-zinc-900 dark:text-white mb-3 leading-tight group-hover:text-green-700 dark:group-hover:text-green-700 transition-colors">
                                             {item.title}
                                         </h3>
 

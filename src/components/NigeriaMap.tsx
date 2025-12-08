@@ -24,7 +24,7 @@ interface NigeriaMapProps {
 const zoneColors: Record<string, string> = {
     "North West": "#15803d", // orange-700
     "North East": "#16a34a", // yellow-600
-    "North Central": "#22c55e", // green-500
+    "North Central": "#22c55e", // green-700
     "South West": "#84cc16", // lime-500
     "South East": "#65a30d", // lime-600
     "South South": "#0d9488", // teal-600
@@ -208,7 +208,7 @@ export default function NigeriaMap({ className, onStateClick, disableModal = fal
                             className="bg-white dark:bg-zinc-900 rounded-2xl shadow-2xl w-full max-w-md overflow-hidden border border-zinc-200 dark:border-zinc-800"
                             onClick={(e) => e.stopPropagation()}
                         >
-                            <div className="relative h-32 bg-linear-to-br from-green-600 to-teal-700 flex items-center justify-center">
+                            <div className="relative h-32 bg-linear-to-br from-green-700 to-teal-700 flex items-center justify-center">
                                 <h2 className="text-3xl font-bold text-white drop-shadow-md">
                                     {selectedState.name}
                                 </h2>

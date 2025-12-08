@@ -53,7 +53,7 @@ export default function ProposalDetailPage({ params }: PageProps) {
             {/* Nav Back Header */}
             <div className="sticky top-0 z-40 bg-white/80 dark:bg-black/80 backdrop-blur-md border-b border-zinc-200 dark:border-zinc-800">
                 <div className="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between">
-                    <Link href="/proposals" className="flex items-center gap-2 text-sm font-medium text-zinc-600 dark:text-zinc-400 hover:text-green-600 dark:hover:text-green-500 transition-colors">
+                    <Link href="/proposals" className="flex items-center gap-2 text-sm font-medium text-zinc-600 dark:text-zinc-400 hover:text-green-700 dark:hover:text-green-700 transition-colors">
                         <ArrowLeft className="w-4 h-4" />
                         Back to Proposals
                     </Link>
@@ -82,7 +82,7 @@ export default function ProposalDetailPage({ params }: PageProps) {
                             {proposal.status}
                         </span>
                         <span className="text-zinc-400">•</span>
-                        <span className="text-green-600 dark:text-green-400 font-medium">{proposal.category}</span>
+                        <span className="text-green-700 dark:text-green-400 font-medium">{proposal.category}</span>
                     </div>
 
                     <h1 className="text-3xl md:text-5xl font-black mb-6 text-zinc-900 dark:text-white leading-tight">
@@ -102,7 +102,7 @@ export default function ProposalDetailPage({ params }: PageProps) {
                             </div>
                         </div>
                         <div className="flex items-center gap-4">
-                            <button className="flex items-center gap-2 px-4 py-2 bg-zinc-100 dark:bg-zinc-800 hover:bg-green-100 dark:hover:bg-green-900/20 text-zinc-700 dark:text-zinc-300 hover:text-green-600 dark:hover:text-green-500 rounded-xl transition-all">
+                            <button className="flex items-center gap-2 px-4 py-2 bg-zinc-100 dark:bg-zinc-800 hover:bg-green-100 dark:hover:bg-green-900/20 text-zinc-700 dark:text-zinc-300 hover:text-green-700 dark:hover:text-green-700 rounded-xl transition-all">
                                 <ThumbsUp className="w-5 h-5" />
                                 <span className="font-bold">{proposal.upvotes}</span>
                             </button>
@@ -113,7 +113,7 @@ export default function ProposalDetailPage({ params }: PageProps) {
                 {/* Content Body */}
                 <div className="bg-white dark:bg-zinc-900 rounded-3xl p-6 md:p-10 border border-zinc-200 dark:border-zinc-800 shadow-sm mb-10">
                     <div
-                        className="prose dark:prose-invert max-w-none prose-lg prose-headings:font-bold prose-headings:tracking-tight prose-p:text-zinc-600 dark:prose-p:text-zinc-300 prose-a:text-green-600"
+                        className="prose dark:prose-invert max-w-none prose-lg prose-headings:font-bold prose-headings:tracking-tight prose-p:text-zinc-600 dark:prose-p:text-zinc-300 prose-a:text-green-700"
                         dangerouslySetInnerHTML={{ __html: proposal.content }}
                     />
 
@@ -137,13 +137,13 @@ export default function ProposalDetailPage({ params }: PageProps) {
                         {isLoggedIn ? (
                             <form onSubmit={handleCommentSubmit}>
                                 <div className="flex items-start gap-3 mb-4">
-                                    <div className="w-8 h-8 rounded-full bg-green-600 flex items-center justify-center text-white font-bold shrink-0">
+                                    <div className="w-8 h-8 rounded-full bg-green-700 flex items-center justify-center text-white font-bold shrink-0">
                                         U
                                     </div>
                                     <div className="ml-1">
                                         <span className="text-sm font-bold block text-zinc-900 dark:text-white">You</span>
                                         {isVerified && (
-                                            <span className="text-[10px] text-green-600 flex items-center gap-0.5">
+                                            <span className="text-[10px] text-green-700 flex items-center gap-0.5">
                                                 <ShieldCheck className="w-3 h-3" /> Verified Citizen
                                             </span>
                                         )}
@@ -153,13 +153,13 @@ export default function ProposalDetailPage({ params }: PageProps) {
                                     value={commentText}
                                     onChange={(e) => setCommentText(e.target.value)}
                                     placeholder="Share your thoughts constructively..."
-                                    className="w-full bg-white dark:bg-zinc-900 border-0 rounded-xl p-4 min-h-[120px] focus:ring-2 focus:ring-green-500 mb-3 resize-y"
+                                    className="w-full bg-white dark:bg-zinc-900 border-0 rounded-xl p-4 min-h-[120px] focus:ring-2 focus:ring-green-700 mb-3 resize-y"
                                 />
                                 <div className="flex justify-end">
                                     <button
                                         type="submit"
                                         disabled={!commentText.trim()}
-                                        className="px-6 py-2 bg-green-600 hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold rounded-xl transition-colors"
+                                        className="px-6 py-2 bg-green-700 hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold rounded-xl transition-colors"
                                     >
                                         Post Comment
                                     </button>
@@ -186,14 +186,14 @@ export default function ProposalDetailPage({ params }: PageProps) {
                                     <div className="flex items-center gap-2 mb-1">
                                         <span className="font-bold text-zinc-900 dark:text-white">{comment.author}</span>
                                         {comment.verified && (
-                                            <ShieldCheck className="w-4 h-4 text-green-500" aria-label="Verified User" />
+                                            <ShieldCheck className="w-4 h-4 text-green-700" aria-label="Verified User" />
                                         )}
                                         <span className="text-xs text-zinc-500">• {comment.date}</span>
                                     </div>
                                     <p className="text-zinc-600 dark:text-zinc-300 leading-relaxed">
                                         {comment.content}
                                     </p>
-                                    <button className="flex items-center gap-1.5 mt-2 text-xs font-medium text-zinc-500 hover:text-green-600 transition-colors">
+                                    <button className="flex items-center gap-1.5 mt-2 text-xs font-medium text-zinc-500 hover:text-green-700 transition-colors">
                                         <ThumbsUp className="w-3 h-3" /> {comment.likes}
                                     </button>
                                 </div>

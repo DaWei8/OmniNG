@@ -10,7 +10,7 @@ export default function Home() {
       {/* Hero Section - Full Screen Map */}
       <section className="w-full py-10">
         <div className="text-6xl xl:text-7xl xl:pt-10 text-center font-bold text-zinc-900 dark:text-white mb-6 tracking-tight leading-tight">
-          <h1>Democratic <span className="text-green-600 dark:text-green-500">Accountability</span></h1>
+          <h1>Democratic <span className="text-green-700 dark:text-green-700">Accountability</span></h1>
           <h2 className="text-4xl lg:text-5xl font-light text-zinc-600 dark:text-zinc-400">At Your Fingertips</h2>
         </div>
         <p className="text-lg lg:text-xl text-center text-zinc-600 dark:text-zinc-300 max-w-xl mx-auto mb-10 leading-relaxed font-medium">
@@ -81,7 +81,7 @@ export default function Home() {
                     </div>
                     <div className="flex gap-4 items-start pb-6 border-b border-zinc-100 dark:border-zinc-800">
                       <div className="w-10 h-10 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center shrink-0">
-                        <Briefcase className="w-5 h-5 text-green-600 dark:text-green-400" />
+                        <Briefcase className="w-5 h-5 text-green-700 dark:text-green-400" />
                       </div>
                       <div>
                         <h4 className="font-semibold text-zinc-900 dark:text-white">Infrastructure Commisioned</h4>
@@ -110,13 +110,13 @@ export default function Home() {
                 {['Verified Government Data', 'Citizen-Led Reporting', 'Detailed Project Tracking', 'Direct Feedback Loop'].map((item, i) => (
                   <li key={i} className="flex items-center gap-3 text-zinc-700 dark:text-zinc-300 font-medium">
                     <div className="w-6 h-6 rounded-full bg-green-100 dark:bg-green-900/50 flex items-center justify-center">
-                      <div className="w-2.5 h-2.5 rounded-full bg-green-600 dark:text-green-500" />
+                      <div className="w-2.5 h-2.5 rounded-full bg-green-700 dark:text-green-700" />
                     </div>
                     {item}
                   </li>
                 ))}
               </ul>
-              <Link href="/news" className="inline-flex items-center gap-2 text-green-600 dark:text-green-500 font-bold hover:gap-3 transition-all">
+              <Link href="/news" className="inline-flex items-center gap-2 text-green-700 dark:text-green-700 font-bold hover:gap-3 transition-all">
                 View Latest Developments <ArrowRight className="w-5 h-5" />
               </Link>
             </div>
@@ -134,7 +134,7 @@ export default function Home() {
             Your voice matters, and together we can build a better Nigeria.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/signup" className="bg-green-600 text-white px-8 py-4 rounded-xl font-bold hover:bg-green-700 transition-colors">
+            <Link href="/signup" className="bg-green-700 text-white px-8 py-4 rounded-xl font-bold hover:bg-green-700 transition-colors">
               Join the Movement
             </Link>
             <Link href="/about" className="bg-transparent border border-zinc-700 text-white px-8 py-4 rounded-xl font-bold hover:bg-zinc-800 transition-colors">
@@ -149,7 +149,7 @@ export default function Home() {
 
 function StatCard({ icon: Icon, value, label, color }: { icon: any, value: string, label: string, color: 'green' | 'blue' | 'orange' | 'purple' }) {
   const colorClasses = {
-    green: 'bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-500',
+    green: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-700',
     blue: 'bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-500',
     orange: 'bg-orange-100 text-orange-600 dark:bg-orange-900/30 dark:text-orange-500',
     purple: 'bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-500',

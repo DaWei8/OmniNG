@@ -1,11 +1,14 @@
 "use client";
 
-import React, { use } from 'react';
+import { use } from 'react';
 import { notFound } from 'next/navigation';
-import { newsData, NewsCategory } from '@/data/newsData';
-import { Calendar, Clock, ArrowLeft, Share2, Tag, ChevronRight } from 'lucide-react';
+import { newsData } from '@/data/newsData';
+import { Calendar, Clock, ArrowLeft, Share2, Tag, Icon, BookOpen } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
+import clsx from 'clsx';
+import { categoryColors, categoryIcons } from '../page';
 
 interface PageProps {
     params: Promise<{ id: string }>;
@@ -26,9 +29,9 @@ export default function NewsDetailPage({ params }: PageProps) {
     return (
         <div className="min-h-screen bg-white dark:bg-black text-zinc-900 dark:text-white pb-20">
             {/* Nav Back Header */}
-            <div className="sticky top-0 z-40 bg-white/80 dark:bg-black/80 backdrop-blur-md border-b border-zinc-100 dark:border-zinc-800">
-                <div className="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between">
-                    <Link href="/news" className="flex items-center gap-2 text-sm font-medium text-zinc-600 dark:text-zinc-400 hover:text-green-600 dark:hover:text-green-500 transition-colors">
+            <div className="sticky top-14 z-40 bg-white/80 dark:bg-black/80 backdrop-blur-md border-b border-zinc-100 dark:border-zinc-800">
+                <div className="max-w-4xl xl:max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+                    <Link href="/news" className="flex items-center gap-2 text-sm font-medium text-zinc-600 dark:text-zinc-400 hover:text-green-700 dark:hover:text-green-700 transition-colors">
                         <ArrowLeft className="w-4 h-4" />
                         Back to News
                     </Link>
@@ -38,9 +41,9 @@ export default function NewsDetailPage({ params }: PageProps) {
                 </div>
             </div>
 
-            <article className="max-w-4xl mx-auto px-4 py-10">
+            <article className="max-w-4xl xl:max-w-6xl flex flex-col items-center mx-auto px-4 py-10">
                 {/* Header Section */}
-                <header className="mb-10 text-center">
+                <header className="mb-10 max-w-3xl text-center">
                     <div className="flex items-center justify-center gap-2 mb-6">
                         <span className="px-3 py-1 rounded-full bg-zinc-100 dark:bg-zinc-800 text-xs font-bold uppercase tracking-wider text-zinc-600 dark:text-zinc-400">
                             {newsItem.category}
@@ -59,7 +62,7 @@ export default function NewsDetailPage({ params }: PageProps) {
                             <Clock className="w-4 h-4" />
                             {newsItem.readTime || '5 min read'}
                         </div>
-                        <div className="font-medium text-green-600 dark:text-green-500">
+                        <div className="font-medium text-green-700 dark:text-green-700">
                             By {newsItem.author || 'Editorial Staff'}
                         </div>
                         <div className="italic">
@@ -69,7 +72,7 @@ export default function NewsDetailPage({ params }: PageProps) {
                 </header>
 
                 {/* Main Image (Placeholder if none) */}
-                <div className="relative aspect-video w-full bg-zinc-100 dark:bg-zinc-900 rounded-3xl overflow-hidden mb-12 shadow-sm">
+                <div className="relative aspect-video w-full bg-zinc-100 dark:bg-zinc-900 rounded-3xl overflow-hidden mb-12 shadow-sm h-[500px]">
                     {newsItem.imageUrl ? (
                         <Image
                             src={newsItem.imageUrl}
@@ -88,7 +91,7 @@ export default function NewsDetailPage({ params }: PageProps) {
                 </div>
 
                 {/* Content Body */}
-                <div className="prose prose-zinc dark:prose-invert prose-lg max-w-none mb-16">
+                <div className="prose max-w-3xl prose-zinc dark:prose-invert prose-lg mb-16">
                     <p className="lead text-xl text-zinc-600 dark:text-zinc-300 font-medium">
                         {newsItem.summary}
                     </p>
@@ -109,7 +112,7 @@ export default function NewsDetailPage({ params }: PageProps) {
                             <p>
                                 Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit.
                             </p>
-                            <blockquote className="border-l-4 border-green-500 pl-4 italic my-8 text-zinc-600 dark:text-zinc-400">
+                            <blockquote className="border-l-4 border-green-700 pl-4 italic my-8 text-zinc-600 dark:text-zinc-400">
                                 "This development marks a significant turning point for the sector, promising renewed growth and stability for the coming fiscal year."
                             </blockquote>
                             <p>
@@ -121,33 +124,58 @@ export default function NewsDetailPage({ params }: PageProps) {
 
                 {/* Related News */}
                 {relatedNews.length > 0 && (
-                    <div className="border-t border-zinc-100 dark:border-zinc-800 pt-16">
-                        <h3 className="text-2xl font-bold mb-8 flex items-center gap-2">
-                            <Tag className="w-6 h-6 text-green-600" />
+                    <div className="border-t max-w-5xl border-zinc-100 dark:border-zinc-800 pt-16">
+                        <h3 className="text-4xl font-bold mb-8 flex items-center gap-2">
+                            <Tag className="w-6 h-6 text-green-700" />
                             Related in {newsItem.category}
                         </h3>
-                        <div className="grid md:grid-cols-3 gap-6">
-                            {relatedNews.map((related) => (
-                                <Link href={`/news/${related.id}`} key={related.id} className="group cursor-pointer">
-                                    <div className="aspect-video bg-zinc-100 dark:bg-zinc-900 rounded-xl mb-4 overflow-hidden">
-                                        {/* Thumbnail Placeholder */}
-                                        <div className="w-full h-full flex items-center justify-center bg-zinc-50 dark:bg-zinc-800/50 group-hover:scale-105 transition-transform duration-500">
-                                            <span className="text-zinc-300 dark:text-zinc-700 font-bold text-3xl opacity-20">
-                                                {related.category.charAt(0)}
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <h4 className="font-bold text-lg mb-2 group-hover:text-green-600 transition-colors line-clamp-2">
-                                        {related.title}
-                                    </h4>
-                                    <p className="text-sm text-zinc-500 line-clamp-2">
-                                        {related.summary}
-                                    </p>
-                                    <div className="mt-3 flex items-center text-xs text-zinc-400 font-medium group-hover:text-green-600 transition-colors">
-                                        Read More <ChevronRight className="w-3 h-3 ml-1" />
-                                    </div>
-                                </Link>
-                            ))}
+                        <div className="grid md:grid-cols-3 gap-4">
+                            {relatedNews.map((related) => {
+                                const Icon = categoryIcons[related.category] || BookOpen;
+                                return (
+                                    <Link href={`/news/${related.id}`} key={related.id} className="block h-full">
+                                        <motion.div
+                                            layout
+                                            initial={{ opacity: 0, scale: 0.9 }}
+                                            animate={{ opacity: 1, scale: 1 }}
+                                            exit={{ opacity: 0, scale: 0.9 }}
+                                            transition={{ duration: 0.2 }}
+                                            className="group bg-white dark:bg-zinc-900 rounded-2xl p-6 border border-zinc-100 dark:border-zinc-800 hover:shadow-xl dark:hover:shadow-zinc-900/50 hover:border-zinc-200 dark:hover:border-zinc-700 transition-all duration-300 cursor-pointer flex flex-col h-full"
+                                        >
+                                            <div className="flex justify-between items-start mb-4">
+                                                <span className={clsx(
+                                                    "px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider",
+                                                    categoryColors[related.category]
+                                                )}>
+                                                    {related.category}
+                                                </span>
+                                                <div className="p-2 rounded-full bg-zinc-50 dark:bg-zinc-800 group-hover:scale-110 transition-transform">
+                                                    <Icon className="w-4 h-4 text-zinc-400 dark:text-zinc-500" />
+                                                </div>
+                                            </div>
+
+                                            <h3 className="text-xl font-bold text-zinc-900 dark:text-white mb-3 leading-tight group-hover:text-green-700 dark:group-hover:text-green-700 transition-colors">
+                                                {related.title}
+                                            </h3>
+
+                                            <p className="text-zinc-600 dark:text-zinc-400 text-sm leading-relaxed mb-6 grow">
+                                                {related.summary}
+                                            </p>
+
+                                            <div className="mt-auto pt-4 border-t border-zinc-100 dark:border-zinc-800 flex items-center justify-between text-xs text-zinc-500 font-medium">
+                                                <div className="flex items-center gap-2">
+                                                    <Calendar className="w-3.5 h-3.5" />
+                                                    {related.date}
+                                                </div>
+                                                <div className="flex items-center gap-2">
+                                                    <Clock className="w-3.5 h-3.5" />
+                                                    {related.readTime || '3 min read'}
+                                                </div>
+                                            </div>
+                                        </motion.div>
+                                    </Link>
+                                )
+                            })}
                         </div>
                     </div>
                 )}

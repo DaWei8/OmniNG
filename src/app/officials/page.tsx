@@ -13,7 +13,7 @@ const topGovernors = [
 ];
 
 const statePerformance = [
-    { state: "Lagos", category: "Economy", score: 95, color: "bg-green-500" },
+    { state: "Lagos", category: "Economy", score: 95, color: "bg-green-700" },
     { state: "Rivers", category: "Infrastructure", score: 88, color: "bg-blue-500" },
     { state: "Edo", category: "Digital Innovation", score: 82, color: "bg-purple-500" },
     { state: "Borno", category: "Resilience", score: 78, color: "bg-orange-500" },
@@ -42,7 +42,7 @@ export default function OfficialsPage() {
             <div className="">
                 <div className="relative bg-zinc-950 pt-20 pb-14 px-4 overflow-hidden">
                     <div className="absolute inset-0 bg-blue-950/50" />
-                    <div className="absolute -top-24 -right-24 w-96 h-96 bg-green-500/20 rounded-full blur-3xl opacity-50" />
+                    <div className="absolute -top-24 -right-24 w-96 h-96 bg-green-700/20 rounded-full blur-3xl opacity-50" />
                     <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl opacity-50" />
 
                     <div className="max-w-5xl xl:max-w-7xl mx-auto relative z-10">
@@ -61,7 +61,7 @@ export default function OfficialsPage() {
                             <div className="bg-white/10 backdrop-blur-md p-1 rounded-xl flex shrink-0 border border-white/10">
                                 <button
                                     onClick={() => setViewMode("directory")}
-                                    className={`px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 transition-all ${viewMode === "directory" ? "bg-green-600 text-white shadow-lg" : "text-zinc-400 hover:text-white"
+                                    className={`px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 transition-all ${viewMode === "directory" ? "bg-green-700 text-white shadow-lg" : "text-zinc-400 hover:text-white"
                                         }`}
                                 >
                                     <LayoutGrid className="w-4 h-4" />
@@ -69,7 +69,7 @@ export default function OfficialsPage() {
                                 </button>
                                 <button
                                     onClick={() => setViewMode("leaderboard")}
-                                    className={`px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 transition-all ${viewMode === "leaderboard" ? "bg-green-600 text-white shadow-lg" : "text-zinc-400 hover:text-white"
+                                    className={`px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 transition-all ${viewMode === "leaderboard" ? "bg-green-700 text-white shadow-lg" : "text-zinc-400 hover:text-white"
                                         }`}
                                 >
                                     <ListOrdered className="w-4 h-4" />
@@ -92,7 +92,7 @@ export default function OfficialsPage() {
                                             placeholder="Search by name, state, or position..."
                                             value={searchTerm}
                                             onChange={(e) => setSearchTerm(e.target.value)}
-                                            className="w-full pl-12 pr-4 py-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/10 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-green-500 transition-all shadow-lg"
+                                            className="w-full pl-12 pr-4 py-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/10 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-green-700 transition-all shadow-lg"
                                         />
                                         <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-white/50 w-5 h-5" />
                                     </div>
@@ -103,7 +103,7 @@ export default function OfficialsPage() {
                                             key={role}
                                             onClick={() => setFilter(role)}
                                             className={`px-4 min-w-16 py-2 rounded-lg text-sm font-bold whitespace-nowrap transition-colors ${filter === role
-                                                ? "bg-green-600 text-white"
+                                                ? "bg-green-800 text-white"
                                                 : "bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-800"
                                                 }`}
                                         >
@@ -131,7 +131,7 @@ export default function OfficialsPage() {
                                         <motion.div
                                             initial={{ opacity: 0, y: 20 }}
                                             animate={{ opacity: 1, y: 0 }}
-                                            className="bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-200 dark:border-zinc-800 p-5 hover:shadow-xl hover:border-green-500/30 transition-all group flex flex-col h-full"
+                                            className="bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-200 dark:border-zinc-800 p-5 hover:shadow-xl hover:border-green-700/30 transition-all group flex flex-col h-full"
                                         >
                                             <div className="flex items-start justify-between mb-4">
                                                 <div className="flex items-start gap-4">
@@ -143,10 +143,10 @@ export default function OfficialsPage() {
 
                                                     </div>
                                                     <div>
-                                                        <h3 className="font-bold text-lg text-zinc-900 dark:text-white group-hover:text-green-600 transition-colors line-clamp-1">
+                                                        <h3 className="font-bold text-lg text-zinc-900 dark:text-white group-hover:text-green-700 transition-colors line-clamp-1">
                                                             {official.name}
                                                         </h3>
-                                                        <p className="text-sm font-medium text-green-600 dark:text-green-500 line-clamp-2 min-h-[2.5em] leading-tight">
+                                                        <p className="text-sm font-medium text-green-700 dark:text-green-700 line-clamp-2 min-h-[2.5em] leading-tight">
                                                             {official.position || `${official.role} • ${official.state}`}
                                                         </p>
                                                         <span className="inline-block mt-1 px-2 py-0.5 text-xs font-medium bg-zinc-100 dark:bg-zinc-800 rounded text-zinc-600 dark:text-zinc-300">
@@ -162,7 +162,7 @@ export default function OfficialsPage() {
 
                                             <div className="grid grid-cols-3 gap-2 mb-6 mt-auto">
                                                 <div className="text-center p-2 bg-green-50 dark:bg-green-900/20 rounded-lg">
-                                                    <span className="block text-lg font-bold text-green-600 dark:text-green-400">{official.promises.kept}</span>
+                                                    <span className="block text-lg font-bold text-green-700 dark:text-green-400">{official.promises.kept}</span>
                                                     <span className="text-xs text-zinc-500">Kept</span>
                                                 </div>
                                                 <div className="text-center p-2 bg-red-50 dark:bg-red-900/20 rounded-lg">
@@ -175,7 +175,7 @@ export default function OfficialsPage() {
                                                 </div>
                                             </div>
 
-                                            <button className="w-full py-3 cursor-pointer rounded-xl border border-zinc-200 dark:border-zinc-700 font-medium dark:hover:bg-green-800 transition-colors flex items-center justify-center gap-2 group-hover:bg-green-600 hover:bg-green-600 group-hover:text-white group-hover:border-green-600">
+                                            <button className="w-full py-3 cursor-pointer rounded-xl border border-zinc-200 dark:border-zinc-700 font-medium dark:hover:bg-green-800 transition-colors flex items-center justify-center gap-2 group-hover:bg-green-700 hover:bg-green-700 group-hover:text-white group-hover:border-green-700">
                                                 View Full Profile
                                                 <ChevronRight className="w-4 h-4" />
                                             </button>
@@ -212,8 +212,8 @@ export default function OfficialsPage() {
                                                         <p className="text-sm text-zinc-500">{gov.state} State</p>
                                                     </div>
                                                     <div className="text-right">
-                                                        <span className="block text-xl font-bold text-green-600 dark:text-green-400">{gov.score}%</span>
-                                                        {gov.trend === "up" && <TrendingUp className="w-4 h-4 text-green-500 inline" />}
+                                                        <span className="block text-xl font-bold text-green-700 dark:text-green-400">{gov.score}%</span>
+                                                        {gov.trend === "up" && <TrendingUp className="w-4 h-4 text-green-700 inline" />}
                                                         {gov.trend === "down" && <TrendingDown className="w-4 h-4 text-red-500 inline" />}
                                                     </div>
                                                 </div>
@@ -253,7 +253,7 @@ export default function OfficialsPage() {
                                 </div>
 
                                 {/* Citizen Engagement */}
-                                <div className="bg-linear-to-r from-green-600 to-teal-700 rounded-3xl p-8 md:p-12 text-white shadow-2xl relative overflow-hidden">
+                                <div className="bg-linear-to-r from-green-700 to-teal-700 rounded-3xl p-8 md:p-12 text-white shadow-2xl relative overflow-hidden">
                                     <div className="absolute top-0 right-0 p-32 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
                                     <div className="flex flex-col md:flex-row items-start justify-between gap-8 relative z-10">
                                         <div>

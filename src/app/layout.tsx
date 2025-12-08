@@ -25,7 +25,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`scroll-smooth ${urbanist.variable}`}>
       <body
-        className={`antialiased bg-zinc-50 dark:bg-black text-zinc-900 dark:text-white font-sans`}
+        className={`antialiased relative bg-zinc-50 dark:bg-black text-zinc-900 dark:text-white font-sans`}
       >
         <Navbar />
         {children}

@@ -14,7 +14,7 @@ export default function Footer() {
                     {/* Brand Section */}
                     <div className="space-y-6">
                         <Link href="/" className="text-2xl font-black tracking-tight flex items-center gap-2">
-                            <div className="w-8 h-8 rounded-lg bg-green-600 flex items-center justify-center">
+                            <div className="w-8 h-8 rounded-lg bg-green-700 flex items-center justify-center">
                                 <span className="text-white font-bold text-lg">O</span>
                             </div>
                             <span>OmniNG</span>
@@ -63,9 +63,9 @@ export default function Footer() {
                             <input
                                 type="email"
                                 placeholder="Enter your email"
-                                className="bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2 w-full focus:outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600 transition-all text-sm"
+                                className="bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2 w-full focus:outline-none focus:border-green-700 focus:ring-1 focus:ring-green-700 transition-all text-sm"
                             />
-                            <button className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors flex items-center justify-center">
+                            <button className="bg-green-700 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors flex items-center justify-center">
                                 <ArrowRight className="w-4 h-4" />
                             </button>
                         </form>
@@ -90,7 +90,7 @@ function SocialLink({ href, icon, label }: { href: string; icon: React.ReactNode
     return (
         <Link
             href={href}
-            className="w-10 h-10 rounded-full bg-zinc-900 flex items-center justify-center hover:bg-green-600 hover:text-white transition-all duration-300"
+            className="w-10 h-10 rounded-full bg-zinc-900 flex items-center justify-center hover:bg-green-700 hover:text-white transition-all duration-300"
             aria-label={label}
         >
             {icon}
@@ -101,8 +101,8 @@ function SocialLink({ href, icon, label }: { href: string; icon: React.ReactNode
 function FooterLink({ href, label }: { href: string; label: string }) {
     return (
         <li>
-            <Link href={href} className="text-zinc-400 hover:text-green-500 transition-colors flex items-center gap-2 group">
-                <span className="w-1.5 h-1.5 rounded-full bg-zinc-700 group-hover:bg-green-500 transition-colors" />
+            <Link href={href} className="text-zinc-400 hover:text-green-700 transition-colors flex items-center gap-2 group">
+                <span className="w-1.5 h-1.5 rounded-full bg-zinc-700 group-hover:bg-green-700 transition-colors" />
                 {label}
             </Link>
         </li>

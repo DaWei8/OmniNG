@@ -12,30 +12,30 @@ import { motion } from 'framer-motion';
 import { FaFacebook, FaInstagram, FaTwitter } from 'react-icons/fa';
 
 interface PageProps {
-    params: Promise<{ name: string }>;
+    params: Promise<{ id: string }>;
 }
 
 export default function OfficialDetailPage({ params }: PageProps) {
-    const { name } = use(params);
-    const officialId = parseInt(name);
-    const official = officialsData.find((o) => o.id === officialId);
+    const { id } = use(params);
+    const decodedName = decodeURIComponent(id);
+    const official = officialsData.find((o) => o.name === decodedName);
 
     if (!official) {
         notFound();
     }
 
     const sortedOfficials = [...officialsData].sort((a, b) => b.rating - a.rating);
-    const overallRank = sortedOfficials.findIndex(o => o.id === officialId) + 1;
+    const overallRank = sortedOfficials.findIndex(o => o.name === decodedName) + 1;
 
     const roleOfficials = officialsData.filter(o => o.role === official.role).sort((a, b) => b.rating - a.rating);
-    const roleRank = roleOfficials.findIndex(o => o.id === officialId) + 1;
+    const roleRank = roleOfficials.findIndex(o => o.name === decodedName) + 1;
 
     return (
-        <div className="min-h-screen bg-zinc-50 dark:bg-black text-zinc-900 dark:text-white pb-20">
+        <div className="min-h-screen relative bg-zinc-50 dark:bg-black text-zinc-900 dark:text-white pb-20">
             {/* Nav Back Header */}
-            <div className="sticky top-0 z-40 bg-white/80 dark:bg-black/80 backdrop-blur-md border-b border-zinc-200 dark:border-zinc-800">
+            <div className="sticky top-14 z-40 bg-white/80 dark:bg-black/80 backdrop-blur-md border-b border-zinc-200 dark:border-zinc-800">
                 <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-                    <Link href="/officials" className="flex items-center gap-2 text-sm font-medium text-zinc-600 dark:text-zinc-400 hover:text-green-600 dark:hover:text-green-500 transition-colors">
+                    <Link href="/officials" className="flex items-center gap-2 text-sm font-medium text-zinc-600 dark:text-zinc-400 hover:text-green-700 dark:hover:text-green-700 transition-colors">
                         <ArrowLeft className="w-4 h-4" />
                         Back to Officials
                     </Link>
@@ -105,7 +105,7 @@ export default function OfficialDetailPage({ params }: PageProps) {
                         {/* Key Stats */}
                         <div className="grid grid-cols-3 gap-3">
                             <div className="bg-green-50 dark:bg-green-900/10 rounded-xl p-3 border border-green-100 dark:border-green-900/20 text-center">
-                                <div className="text-2xl font-bold text-green-600 dark:text-green-500">{official.promises.kept}</div>
+                                <div className="text-2xl font-bold text-green-700 dark:text-green-700">{official.promises.kept}</div>
                                 <div className="text-xs font-medium text-green-800 dark:text-green-300">Promises Kept</div>
                             </div>
                             <div className="bg-red-50 dark:bg-red-900/10 rounded-xl p-3 border border-red-100 dark:border-red-900/20 text-center">
@@ -126,14 +126,14 @@ export default function OfficialDetailPage({ params }: PageProps) {
                         {/* Contact Details */}
                         <div className="bg-white dark:bg-zinc-900 rounded-3xl p-6 border border-zinc-200 dark:border-zinc-800">
                             <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
-                                <Mail className="w-5 h-5 text-green-600" />
+                                <Mail className="w-5 h-5 text-green-700" />
                                 Contact Details
                             </h3>
                             <div className="space-y-4 text-sm">
                                 {official.contact?.email && (
                                     <div className="flex items-center gap-3 text-zinc-600 dark:text-zinc-400">
                                         <Mail className="w-4 h-4 shrink-0 opacity-50" />
-                                        <a href={`mailto:${official.contact.email}`} className="hover:text-green-600 break-all">{official.contact.email}</a>
+                                        <a href={`mailto:${official.contact.email}`} className="hover:text-green-700 break-all">{official.contact.email}</a>
                                     </div>
                                 )}
                                 {official.contact?.phone && (
@@ -157,17 +157,17 @@ export default function OfficialDetailPage({ params }: PageProps) {
 
                                 <div className="pt-4 border-t border-zinc-100 dark:border-zinc-800 flex gap-4">
                                     {official.contact?.twitter && (
-                                        <a href={`https://twitter.com/${official.contact.twitter}`} target="_blank" rel="noopener noreferrer" className="p-2 bg-zinc-100 dark:bg-zinc-800 rounded-full hover:text-green-600 transition-colors">
+                                        <a href={`https://twitter.com/${official.contact.twitter}`} target="_blank" rel="noopener noreferrer" className="p-2 bg-zinc-100 dark:bg-zinc-800 rounded-full hover:text-green-700 transition-colors">
                                             <FaTwitter className="w-4 h-4" />
                                         </a>
                                     )}
                                     {official.contact?.facebook && (
-                                        <a href={`https://facebook.com/${official.contact.facebook}`} target="_blank" rel="noopener noreferrer" className="p-2 bg-zinc-100 dark:bg-zinc-800 rounded-full hover:text-green-600 transition-colors">
+                                        <a href={`https://facebook.com/${official.contact.facebook}`} target="_blank" rel="noopener noreferrer" className="p-2 bg-zinc-100 dark:bg-zinc-800 rounded-full hover:text-green-700 transition-colors">
                                             <FaFacebook className="w-4 h-4" />
                                         </a>
                                     )}
                                     {official.contact?.instagram && (
-                                        <a href={`https://instagram.com/${official.contact.instagram}`} target="_blank" rel="noopener noreferrer" className="p-2 bg-zinc-100 dark:bg-zinc-800 rounded-full hover:text-green-600 transition-colors">
+                                        <a href={`https://instagram.com/${official.contact.instagram}`} target="_blank" rel="noopener noreferrer" className="p-2 bg-zinc-100 dark:bg-zinc-800 rounded-full hover:text-green-700 transition-colors">
                                             <FaInstagram className="w-4 h-4" />
                                         </a>
                                     )}
@@ -178,7 +178,7 @@ export default function OfficialDetailPage({ params }: PageProps) {
                         {/* Financials Estimate */}
                         <div className="bg-white dark:bg-zinc-900 rounded-3xl p-6 border border-zinc-200 dark:border-zinc-800">
                             <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
-                                <Wallet className="w-5 h-5 text-green-600" />
+                                <Wallet className="w-5 h-5 text-green-700" />
                                 Financial Profile
                             </h3>
                             <div className="space-y-4">
@@ -207,7 +207,7 @@ export default function OfficialDetailPage({ params }: PageProps) {
                         {official.manifesto && (
                             <div className="bg-white dark:bg-zinc-900 rounded-3xl p-6 md:p-8 border border-zinc-200 dark:border-zinc-800">
                                 <h3 className="text-xl font-bold mb-2 flex items-center gap-2">
-                                    <BookOpen className="w-6 h-6 text-green-600" />
+                                    <BookOpen className="w-6 h-6 text-green-700" />
                                     Campaign Manifesto
                                 </h3>
                                 <h4 className="text-lg font-bold text-zinc-800 dark:text-white mb-2">{official.manifesto.title}</h4>
@@ -216,7 +216,7 @@ export default function OfficialDetailPage({ params }: PageProps) {
                                 <div className="grid md:grid-cols-2 gap-4">
                                     {official.manifesto.points.map((point, index) => (
                                         <div key={index} className="flex items-start gap-3 p-3 rounded-xl bg-zinc-50 dark:bg-zinc-800/50">
-                                            <div className="w-1.5 h-1.5 rounded-full bg-green-500 mt-2 shrink-0" />
+                                            <div className="w-1.5 h-1.5 rounded-full bg-green-700 mt-2 shrink-0" />
                                             <span className="text-sm text-zinc-700 dark:text-zinc-300 font-medium">{point}</span>
                                         </div>
                                     ))}
@@ -227,7 +227,7 @@ export default function OfficialDetailPage({ params }: PageProps) {
                         {/* Achievements */}
                         <div className="bg-white dark:bg-zinc-900 rounded-3xl p-6 md:p-8 border border-zinc-200 dark:border-zinc-800">
                             <h3 className="text-xl font-bold mb-6 flex items-center gap-2">
-                                <Award className="w-6 h-6 text-green-600" />
+                                <Award className="w-6 h-6 text-green-700" />
                                 Official Achievements
                             </h3>
 
@@ -241,7 +241,7 @@ export default function OfficialDetailPage({ params }: PageProps) {
                                             transition={{ delay: index * 0.1 }}
                                             className="flex items-start gap-4 p-4 rounded-2xl border border-zinc-100 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-colors"
                                         >
-                                            <div className="p-2 bg-green-100 dark:bg-green-900/30 rounded-full text-green-600 shrink-0">
+                                            <div className="p-2 bg-green-100 dark:bg-green-900/30 rounded-full text-green-700 shrink-0">
                                                 <CheckCircle className="w-5 h-5" />
                                             </div>
                                             <div>
@@ -258,7 +258,7 @@ export default function OfficialDetailPage({ params }: PageProps) {
                         </div>
 
                         {/* Track Record / Stats (Visual Placeholder) */}
-                        <div className="bg-gradient-to-br from-green-600 to-green-800 rounded-3xl p-8 text-white relative overflow-hidden">
+                        <div className="bg-linear-to-br from-green-700 to-green-800 rounded-3xl p-8 text-white relative overflow-hidden">
                             <div className="absolute top-0 right-0 p-32 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
                             <div className="relative z-10">
                                 <h3 className="text-xl font-bold mb-4 flex items-center gap-2">

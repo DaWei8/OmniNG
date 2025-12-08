@@ -23,7 +23,7 @@ const Navbar = () => {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex h-16 items-center justify-between">
                     {/* Logo */}
-                    <Link href="/" className="text-xl font-black text-green-600 dark:text-green-500 z-50">
+                    <Link href="/" className="text-xl font-black text-green-700 dark:text-green-700 z-50">
                         Omni<span className="text-zinc-700 dark:text-white">NG</span>
                     </Link>
 
@@ -39,8 +39,8 @@ const Navbar = () => {
                                         key={link.name}
                                         href={link.href}
                                         className={clsx(
-                                            "relative text-sm font-medium transition-colors hover:text-green-500",
-                                            isActive || isSubPage ? "text-green-500" : "text-zinc-600 dark:text-zinc-300"
+                                            "relative text-sm font-medium transition-colors hover:text-green-700",
+                                            isActive || isSubPage ? "text-green-700" : "text-zinc-600 dark:text-zinc-300"
                                         )}
                                     >
                                         {link.name}
@@ -60,7 +60,7 @@ const Navbar = () => {
 
                         <Link
                             href="/join"
-                            className="px-5 py-2.5 text-sm font-semibold text-white bg-green-600 rounded-full hover:bg-green-700 transition-colors shadow-lg shadow-green-600/20"
+                            className="px-5 py-2.5 text-sm font-semibold text-white bg-green-700 rounded-full hover:bg-green-700 transition-colors shadow-lg shadow-green-700/20"
                         >
                             Register
                         </Link>
@@ -109,7 +109,7 @@ const Navbar = () => {
                                 <Link
                                     href="/join"
                                     onClick={() => setIsOpen(false)}
-                                    className="block w-full text-center px-5 py-3 text-base font-bold text-white bg-green-600 rounded-xl hover:bg-green-700 transition-colors"
+                                    className="block w-full text-center px-5 py-3 text-base font-bold text-white bg-green-700 rounded-xl hover:bg-green-700 transition-colors"
                                 >
                                     Register Now
                                 </Link>
