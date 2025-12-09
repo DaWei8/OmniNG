@@ -6,43 +6,37 @@ import Link from 'next/link';
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-zinc-50 dark:bg-black font-sans">
-      {/* Hero Section - Full Screen Map */}
-      <section className="w-full py-10">
-        <div className="text-6xl xl:text-7xl xl:pt-10 text-center font-bold text-zinc-900 dark:text-white mb-6 tracking-tight leading-tight">
+    <div className="h-full bg-zinc-50 dark:bg-black font-sans">
+      <section className="w-full px-4 md:px-6 lg:px-8 py-10">
+        <div className="text-5xl md:text-6xl xl:text-7xl xl:pt-10 text-center font-bold text-zinc-900 dark:text-white mb-8">
           <h1>Democratic <span className="text-green-700 dark:text-green-700">Accountability</span></h1>
-          <h2 className="text-4xl lg:text-5xl font-light text-zinc-600 dark:text-zinc-400">At Your Fingertips</h2>
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-light text-zinc-600 dark:text-zinc-400">At Your Fingertips</h2>
         </div>
-        <p className="text-lg lg:text-xl text-center text-zinc-600 dark:text-zinc-300 max-w-xl mx-auto mb-10 leading-relaxed font-medium">
+        <p className="text-lg lg:text-xl text-center text-zinc-600 dark:text-zinc-300 max-w-xl mx-auto mb-6 leading-relaxed font-medium">
           Explore the interactive map below. Click on any state to uncover governance data, track officials, and make your voice heard.
         </p>
-        <div className="w-full h-[90vh]">
-          <NigeriaMap className="w-full h-full" />
-        </div>
-
-        {/* Overlay Content */}
-        <div className="flex flex-col items-center justify-start pt-16 px-4">
-          <div className="flex text-center max-w-4xl mx-auto pointer-events-auto flex-col sm:flex-row gap-4 justify-center">
+        <div className="flex flex-col mb-10 items-center justify-start px-4">
+          <div className="flex text-center max-w-4xl mx-auto pointer-events-auto gap-4 justify-center">
             <button
               onClick={() => document.getElementById('stats-section')?.scrollIntoView({ behavior: 'smooth' })}
-              className="bg-zinc-900 dark:bg-white text-white dark:text-black px-8 py-4 rounded-full font-semibold hover:opacity-90 transition-all shadow-xl flex items-center justify-center gap-2"
+              className="bg-zinc-900 dark:bg-white text-white dark:text-black px-4 py-4 rounded-lg font-semibold hover:opacity-90 transition-all shadow-xl flex items-center justify-center gap-2"
             >
               View National Stats
-              <ChevronDown className="w-4 h-4" />
             </button>
             <Link
               href="/news"
-              className="bg-white/80 dark:bg-zinc-800/80 backdrop-blur-md text-zinc-900 dark:text-white border border-zinc-200 dark:border-zinc-700 px-8 py-4 rounded-full font-semibold hover:bg-white dark:hover:bg-zinc-800 transition-all shadow-lg flex items-center justify-center gap-2"
+              className="bg-white/80 dark:bg-zinc-800/80 backdrop-blur-md text-zinc-900 dark:text-white border border-zinc-200 dark:border-zinc-700 px-4 py-4 rounded-lg font-semibold hover:bg-white dark:hover:bg-zinc-800 transition-all shadow-lg flex items-center justify-center gap-2"
             >
               Read Latest News
-              <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
         </div>
+        <div className="h-full">
+          <NigeriaMap className="h-full" />
+        </div>
       </section>
 
-      {/* Live Statistics Section */}
-      <section id="stats-section" className="py-24 bg-white dark:bg-zinc-900">
+      <section id="stats-section" className="py-24 px-4 md:px-6 lg:px-8 bg-white dark:bg-zinc-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl xl:text-5xl font-bold text-zinc-900 dark:text-white mb-4">Real-Time Transparency Metrics</h2>
@@ -60,8 +54,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Feature Split Section */}
-      <section className="py-24 bg-zinc-50 dark:bg-black">
+      <section className="py-24 px-4 md:px-6 lg:px-8 bg-zinc-50 dark:bg-black">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-16 ">
             <div className="custom-order-2 lg:order-1">
@@ -124,8 +117,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Call to Action */}
-      <section className="py-24 bg-zinc-900 text-white relative overflow-hidden">
+      <section className="py-24 px-4 md:px-6 lg:px-8 bg-zinc-900 text-white relative overflow-hidden">
         <div className="absolute top-0 right-0 w-1/2 h-full bg-linear-to-l from-green-900/20 to-transparent" />
         <div className="max-w-4xl mx-auto px-4 text-center relative z-10">
           <h2 className="text-4xl xl:text-5xl font-bold mb-6">Ready to Make a Difference?</h2>

@@ -17,6 +17,10 @@ export const metadata: Metadata = {
   description: "OmniNG",
 };
 
+import { Toaster } from "react-hot-toast";
+
+import { AuthProvider } from "@/context/AuthProvider";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -25,10 +29,13 @@ export default function RootLayout({
   return (
     <html lang="en" className={`scroll-smooth ${urbanist.variable}`}>
       <body
-        className={`antialiased relative bg-zinc-50 dark:bg-black text-zinc-900 dark:text-white font-sans`}
+        className={`antialiased min-h-screen relative bg-zinc-50 dark:bg-black text-zinc-900 dark:text-white font-sans`}
       >
-        <Navbar />
-        {children}
+        <AuthProvider>
+          <Navbar />
+          {children}
+        </AuthProvider>
+        <Toaster position="top-center" />
         <Footer />
       </body>
     </html>

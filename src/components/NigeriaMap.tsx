@@ -74,11 +74,12 @@ export default function NigeriaMap({ className, onStateClick, disableModal = fal
     };
 
     return (
-        <div className={clsx("w-full relative", className)}>
+        <div className={clsx("w-full max-w-7xl mx-auto gap-10 items-end flex flex-col relative", className)}>
+
             <div className="relative w-full h-full rounded-3xl">
                 <svg
                     viewBox={nigeria.viewBox}
-                    className="w-full h-full overflow-visible drop-shadow-2xl filter"
+                    className="w-full h-full px-4 xl:px-20 overflow-visible drop-shadow-2xl filter"
                     aria-label="Map of Nigeria"
                 >
                     <defs>
@@ -160,9 +161,9 @@ export default function NigeriaMap({ className, onStateClick, disableModal = fal
                             exit={{ opacity: 0, y: 10 }}
                             className="absolute pointer-events-none z-20 bg-black/80 text-white text-sm px-3 py-1 rounded-full backdrop-blur-md border border-white/10 shadow-xl"
                             style={{
-                                top: "5%",
+                                top: "50%",
                                 left: "50%",
-                                transform: "translateX(-50%)",
+                                transform: "translateX(-30%)",
                             }}
                         >
                             {nigeria.locations.find((l: StateData) => l.id === hoveredState)?.name}
@@ -172,18 +173,18 @@ export default function NigeriaMap({ className, onStateClick, disableModal = fal
             </div>
 
             {/* Legend Section */}
-            <div className="absolute bottom-0 right-0 xl:right-10 scale-75 xl:scale-100 bg-white dark:bg-zinc-900 rounded-2xl p-6 shadow-sm border border-zinc-200 dark:border-zinc-800">
-                <h3 className="text-lg font-semibold text-zinc-800 dark:text-zinc-100 mb-4">
+            <div className="bg-white xl:absolute bottom-4 right-4 max-w-lg mb-6 dark:bg-zinc-900 rounded-2xl p-3 shadow-sm border border-zinc-200 dark:border-zinc-800">
+                <h3 className="text-md font-semibold text-zinc-800 dark:text-zinc-100 mb-4">
                     Key to Geopolitical Zones
                 </h3>
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-2 gap-4">
+                <div className="grid grid-cols-3 gap-2">
                     {Object.entries(zoneColors).map(([zone, color]) => (
-                        <div key={zone} className="flex items-center space-x-3 group cursor-default">
+                        <div key={zone} className="flex items-center space-x-1 group cursor-default">
                             <div
-                                className="w-6 h-6 rounded-lg shadow-sm ring-1 ring-black/5 group-hover:scale-110 transition-transform"
+                                className="min-w-6 w-6 h-6 rounded-lg shadow-sm ring-1 ring-black/5 group-hover:scale-110 transition-transform"
                                 style={{ backgroundColor: color }}
                             />
-                            <span className="text-sm font-medium text-zinc-600 dark:text-zinc-400 group-hover:text-zinc-900 dark:group-hover:text-white transition-colors">
+                            <span className="text-sm text-nowrap font-medium text-zinc-600 dark:text-zinc-400 group-hover:text-zinc-900 dark:group-hover:text-white transition-colors">
                                 {zone}
                             </span>
                         </div>
@@ -248,6 +249,7 @@ export default function NigeriaMap({ className, onStateClick, disableModal = fal
                     </motion.div>
                 )}
             </AnimatePresence>
+
         </div>
     );
 }

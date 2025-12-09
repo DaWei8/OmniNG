@@ -38,6 +38,7 @@ export default function Footer() {
                             <FooterLink href="/officials" label="Government Officials" />
                             <FooterLink href="/news" label="Latest News" />
                             <FooterLink href="/proposals" label="Citizen Proposals" />
+                            <FooterLink href="/solutions" label="Solutions Directory" />
                         </ul>
                     </div>
 
@@ -45,11 +46,12 @@ export default function Footer() {
                     <div>
                         <h3 className="font-bold text-lg mb-6">Resources</h3>
                         <ul className="space-y-4">
-                            <FooterLink href="#" label="About Us" />
-                            <FooterLink href="#" label="Methodology" />
-                            <FooterLink href="#" label="Data Sources" />
-                            <FooterLink href="#" label="Press Kit" />
-                            <FooterLink href="#" label="Contact Support" />
+                            <FooterLink href="/resources" label="Citizen Resources" />
+                            <FooterLink href="/about" label="About Us" />
+                            <FooterLink href="/methodology" label="Methodology" />
+                            <FooterLink href="/data-sources" label="Data Sources" />
+                            <FooterLink href="/press-kit" label="Press Kit" />
+                            <FooterLink href="/contact" label="Contact Support" />
                         </ul>
                     </div>
 
@@ -76,9 +78,9 @@ export default function Footer() {
                 <div className="pt-8 border-t border-zinc-900 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-zinc-500">
                     <p>&copy; {currentYear} OmniNG. All rights reserved.</p>
                     <div className="flex gap-8">
-                        <Link href="#" className="hover:text-white transition-colors">Privacy Policy</Link>
-                        <Link href="#" className="hover:text-white transition-colors">Terms of Service</Link>
-                        <Link href="#" className="hover:text-white transition-colors">Cookie Policy</Link>
+                        <Link href="/privacy-policy" className="hover:text-white transition-colors">Privacy Policy</Link>
+                        <Link href="/terms-of-service" className="hover:text-white transition-colors">Terms of Service</Link>
+                        <Link href="/cookie-policy" className="hover:text-white transition-colors">Cookie Policy</Link>
                     </div>
                 </div>
             </div>
