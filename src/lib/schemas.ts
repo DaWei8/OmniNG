@@ -19,9 +19,7 @@ export const NewsItemSchema = z.object({
     original_url: z.string().url("Must be a valid URL"),
     publisher: z.string().min(1, "Publisher is required"),
     author: z.string().optional(),
-    category: z.enum(NEWS_CATEGORIES, {
-        errorMap: () => ({ message: "Invalid category selected" }),
-    }),
+    category: z.enum(NEWS_CATEGORIES),
     is_published: z.boolean().default(true),
 });
 

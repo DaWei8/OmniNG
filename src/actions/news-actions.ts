@@ -6,7 +6,7 @@ import { revalidatePath } from "next/cache";
 import { NewsItemSchema } from "@/lib/schemas";
 import { ZodError } from "zod";
 
-export async function addNewsItem(prevState: any, formData: FormData) {
+export async function addNewsItem(prevState: unknown, formData: FormData) {
     const cookieStore = await cookies();
     const supabase = createClient(cookieStore);
 
@@ -49,7 +49,7 @@ export async function addNewsItem(prevState: any, formData: FormData) {
 
     } catch (e) {
         if (e instanceof ZodError) {
-            return { error: e.errors[0].message }; // Return first validation error
+            return { error: (e as any).errors[0].message };
         }
         return { error: "An unexpected error occurred." };
     }

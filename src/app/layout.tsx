@@ -3,7 +3,9 @@ import { Urbanist } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-
+import { Suspense } from "react";
+import { Toaster } from "react-hot-toast";
+import { AuthProvider } from "@/context/AuthProvider";
 
 const urbanist = Urbanist({
   subsets: ["latin"],
@@ -11,16 +13,10 @@ const urbanist = Urbanist({
   variable: '--font-urbanist'
 });
 
-
 export const metadata: Metadata = {
   title: "OmniNG",
   description: "OmniNG",
 };
-
-import { Toaster } from "react-hot-toast";
-
-import { AuthProvider } from "@/context/AuthProvider";
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -32,7 +28,9 @@ export default function RootLayout({
         className={`antialiased min-h-screen relative bg-zinc-50 dark:bg-black text-zinc-900 dark:text-white font-sans`}
       >
         <AuthProvider>
-          <Navbar />
+          <Suspense fallback={null}>
+            <Navbar />
+          </Suspense>
           {children}
         </AuthProvider>
         <Toaster position="top-center" />

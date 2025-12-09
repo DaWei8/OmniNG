@@ -1,8 +1,6 @@
 import { createClient } from "@/utils/supabase/server";
 import { cookies } from "next/headers";
-import { Database } from "@/types/supabase"; // Assuming types exist, otherwise utilize 'any' or define interface locally if needed. 
-// Note: User prompt didn't strictly say to use generated types, but it's good practice. I'll use 'any' if I'm not sure types exist to avoid errors, or try to infer.
-// Actually, I'll define a return type based on the table structure.
+
 
 export type NewsItem = {
     id: string;
@@ -34,7 +32,7 @@ export async function getNewsItems(category?: string, page: number = 1) {
         query = query.eq("category", category);
     }
 
-    const { data, error, count } = await query;
+    const { data, error } = await query;
 
     if (error) {
         console.error("Error fetching news items:", error);
