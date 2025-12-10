@@ -1,13 +1,12 @@
 "use server";
 
 import { createClient } from "@/utils/supabase/server";
-import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
+
 export async function getProposals(category = "All", search = "") {
-    const cookieStore = await cookies();
-    const supabase = createClient(cookieStore);
+    const supabase = await createClient();
 
     let query = supabase
         .from("proposals")
@@ -29,7 +28,6 @@ export async function getProposals(category = "All", search = "") {
         return [];
     }
 
-    // Transform data to match UI expectations
     return data.map((p: any) => ({
         id: p.id,
         title: p.title,
@@ -40,13 +38,12 @@ export async function getProposals(category = "All", search = "") {
         author: p.profiles?.full_name || "Citizen",
         upvotes: p.votes?.length || 0,
         commentsCount: p.comments?.length || 0,
-        hasVoted: false // We will need to check this per user if needed, but for list view maybe not critical or can be computed if we pass userId
+        hasVoted: false
     }));
 }
 
 export async function getProposal(id: string) {
-    const cookieStore = await cookies();
-    const supabase = createClient(cookieStore);
+    const supabase = await createClient();
 
     const { data: proposal, error } = await supabase
         .from("proposals")
@@ -76,14 +73,13 @@ export async function getProposal(id: string) {
     };
 }
 
-export async function createProposal(formData: FormData) {
-    const cookieStore = await cookies();
-    const supabase = createClient(cookieStore);
+export async function createProposal(prevState: any, formData: FormData) {
+    const supabase = await createClient();
 
     const { data: { user } } = await supabase.auth.getUser();
 
     if (!user) {
-        throw new Error("You must be logged in to create a proposal.");
+        return { error: "You must be logged in to create a proposal." };
     }
 
     const title = formData.get("title") as string;
@@ -101,7 +97,7 @@ export async function createProposal(formData: FormData) {
     });
 
     if (error) {
-        throw new Error(error.message);
+        return { error: error.message };
     }
 
     revalidatePath("/proposals");
@@ -109,8 +105,8 @@ export async function createProposal(formData: FormData) {
 }
 
 export async function addComment(proposalId: string, content: string) {
-    const cookieStore = await cookies();
-    const supabase = createClient(cookieStore);
+    const supabase = await createClient();
+
 
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) throw new Error("Unauthorized");
@@ -126,8 +122,7 @@ export async function addComment(proposalId: string, content: string) {
 }
 
 export async function toggleVote(proposalId: string) {
-    const cookieStore = await cookies();
-    const supabase = createClient(cookieStore);
+    const supabase = await createClient();
 
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) throw new Error("Unauthorized");

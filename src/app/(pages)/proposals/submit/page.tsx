@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useActionState } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, Send, Loader2 } from 'lucide-react';
 import { createProposal } from '@/actions/proposals';
 import { useFormStatus } from 'react-dom';
+import RichEditor from '@/components/RichEditor';
 
 function SubmitButton() {
     const { pending } = useFormStatus();
@@ -30,26 +31,33 @@ function SubmitButton() {
 }
 
 export default function SubmitProposalPage() {
+    const [state, formAction] = useActionState(createProposal, null);
+
     const [title, setTitle] = useState("");
     const [category, setCategory] = useState("Infrastructure");
     const [summary, setSummary] = useState("");
     const [content, setContent] = useState("");
 
     return (
-        <div className="min-h-screen bg-zinc-50 dark:bg-black text-zinc-900 dark:text-white pb-20">
-            <div className="sticky top-0 z-40 bg-white/80 dark:bg-black/80 backdrop-blur-md border-b border-zinc-200 dark:border-zinc-800">
-                <div className="max-w-3xl mx-auto px-4 h-16 flex items-center justify-between">
+        <div className="min-h-screen relative bg-zinc-50 dark:bg-black text-zinc-900 dark:text-white pb-20">
+            <div className="sticky top-16 z-40 bg-white/80 dark:bg-black/80 backdrop-blur-md border-b border-zinc-200 dark:border-zinc-800">
+                <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
                     <Link href="/proposals" className="flex items-center gap-2 text-sm font-medium text-zinc-600 dark:text-zinc-400 hover:text-green-700 dark:hover:text-green-700 transition-colors">
                         <ArrowLeft className="w-4 h-4" />
                         Cancel
                     </Link>
-                    <h1 className="font-bold text-lg">New Proposal</h1>
+                    <h1 className="font-bold text-lg">Create New Proposal</h1>
                     <div className="w-10" /> {/* Spacer */}
                 </div>
             </div>
 
             <main className="max-w-3xl mx-auto px-4 py-8">
-                <form action={createProposal} className="space-y-6">
+                {state?.error && (
+                    <div className="bg-red-50 text-red-600 p-4 rounded-xl mb-6 border border-red-100 flex items-center gap-2">
+                        <span>⚠️</span> {state.error}
+                    </div>
+                )}
+                <form action={formAction} className="space-y-6">
                     <div className="bg-white dark:bg-zinc-900 rounded-3xl p-6 md:p-8 border border-zinc-200 dark:border-zinc-800 shadow-sm">
                         <div className="space-y-6">
                             <div>
@@ -99,14 +107,11 @@ export default function SubmitProposalPage() {
 
                             <div>
                                 <label className="block text-sm font-bold mb-2">Full Proposal Details</label>
-                                <textarea
-                                    name="content"
-                                    required
-                                    className="w-full bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl px-4 py-3 focus:ring-2 focus:ring-green-700 outline-none transition-all min-h-[300px]"
-                                    placeholder="Describe your proposal in detail. You can use Markdown formatting..."
-                                    value={content}
-                                    onChange={(e) => setContent(e.target.value)}
+                                <RichEditor
+                                    content={content}
+                                    onChange={(html) => setContent(html)}
                                 />
+                                <input type="hidden" name="content" value={content} />
                             </div>
                         </div>
                     </div>

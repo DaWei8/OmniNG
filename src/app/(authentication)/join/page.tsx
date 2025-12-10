@@ -27,19 +27,36 @@ export default function JoinPage() {
                             {state.error}
                         </div>
                     )}
+                    <div className="grid grid-cols-2 gap-4">
+                        <div>
+                            <label className="block text-sm font-bold text-zinc-700 dark:text-zinc-300 mb-1">
+                                Username
+                            </label>
+                            <input
+                                name="username"
+                                type="text"
+                                required
+                                maxLength={15}
+                                placeholder="@username"
+                                className="w-full px-4 py-3 rounded-xl bg-zinc-50 dark:bg-black border border-zinc-200 dark:border-zinc-800 focus:outline-none focus:ring-2 focus:ring-green-500 transition-all"
+                            />
+                        </div>
 
-                    <div>
-                        <label className="block text-sm font-bold text-zinc-700 dark:text-zinc-300 mb-1">
-                            Full Name
-                        </label>
-                        <input
-                            name="fullName"
-                            type="text"
-                            required
-                            placeholder="John Doe"
-                            className="w-full px-4 py-3 rounded-xl bg-zinc-50 dark:bg-black border border-zinc-200 dark:border-zinc-800 focus:outline-none focus:ring-2 focus:ring-green-500 transition-all"
-                        />
+                        <div>
+                            <label className="block text-sm font-bold text-zinc-700 dark:text-zinc-300 mb-1">
+                                Full Name
+                            </label>
+                            <input
+                                name="fullName"
+                                type="text"
+                                required
+                                placeholder="John Doe"
+                                className="w-full px-4 py-3 rounded-xl bg-zinc-50 dark:bg-black border border-zinc-200 dark:border-zinc-800 focus:outline-none focus:ring-2 focus:ring-green-500 transition-all"
+                            />
+                        </div>
                     </div>
+
+
 
                     <div>
                         <label className="block text-sm font-bold text-zinc-700 dark:text-zinc-300 mb-1">
@@ -53,8 +70,6 @@ export default function JoinPage() {
                             className="w-full px-4 py-3 rounded-xl bg-zinc-50 dark:bg-black border border-zinc-200 dark:border-zinc-800 focus:outline-none focus:ring-2 focus:ring-green-500 transition-all"
                         />
                     </div>
-
-
 
                     <div className="grid grid-cols-2 gap-4">
                         <div>

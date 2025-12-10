@@ -2,10 +2,13 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Filter, Globe, ArrowRight, Lightbulb, Leaf, GraduationCap, HeartPulse, Truck, Wallet, Briefcase, Zap, ExternalLink } from 'lucide-react';
+import { Search, Lightbulb, Leaf, GraduationCap, HeartPulse, Truck, Wallet, Briefcase, Zap, ExternalLink } from 'lucide-react';
 import clsx from 'clsx';
 import Link from 'next/link';
-import { solutionsData, Sector, Solution } from '@/data/solutionsData';
+import { Sector, Solution } from '@/data/solutionsData';
+import PaginationControl from '@/components/PaginationControl';
+import { useEffect } from 'react';
+import { getSolutions } from '@/actions/solutions';
 
 const sectors: (Sector | 'All')[] = [
     'All',
@@ -33,14 +36,41 @@ export default function SolutionsPage() {
     const [searchQuery, setSearchQuery] = useState('');
     const [activeSector, setActiveSector] = useState<Sector | 'All'>('All');
 
-    const filteredSolutions = solutionsData.filter(solution => {
-        const matchesSearch = solution.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            solution.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            solution.problemSolved.toLowerCase().includes(searchQuery.toLowerCase());
-        const matchesSector = activeSector === 'All' || solution.sector === activeSector;
+    const [solutions, setSolutions] = useState<Solution[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
 
-        return matchesSearch && matchesSector;
-    });
+    useEffect(() => {
+        let mounted = true;
+        const fetchData = async () => {
+            setIsLoading(true);
+            try {
+                const data = await getSolutions(activeSector, searchQuery);
+                if (mounted) {
+                    setSolutions(data);
+                }
+            } catch (error) {
+                console.error("Failed to fetch solutions:", error);
+            } finally {
+                if (mounted) setIsLoading(false);
+            }
+        };
+
+        fetchData();
+        return () => { mounted = false; };
+    }, [activeSector, searchQuery]);
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const ITEMS_PER_PAGE = 30;
+
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [activeSector, searchQuery]);
+
+    const totalPages = Math.ceil(solutions.length / ITEMS_PER_PAGE);
+    const paginatedSolutions = solutions.slice(
+        (currentPage - 1) * ITEMS_PER_PAGE,
+        currentPage * ITEMS_PER_PAGE
+    );
 
     return (
         <div className="min-h-screen bg-zinc-50 dark:bg-black text-zinc-900 dark:text-white pb-20">
@@ -88,36 +118,50 @@ export default function SolutionsPage() {
                         })}
                     </div>
                 </div>
-            </div>
+            </div >
 
             <main className="max-w-5xl xl:max-w-7xl mx-auto px-4 py-8">
-                {/* Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <AnimatePresence mode="popLayout">
-                        {filteredSolutions.map((solution) => (
-                            <SolutionCard key={solution.id} solution={solution} />
-                        ))}
-                    </AnimatePresence>
-                </div>
-
-                {filteredSolutions.length === 0 && (
-                    <div className="text-center py-20">
-                        <div className="w-16 h-16 bg-zinc-100 dark:bg-zinc-900 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <Search className="w-8 h-8 text-zinc-400" />
-                        </div>
-                        <h3 className="text-xl font-bold mb-2">No solutions found</h3>
-                        <p className="text-zinc-500">Try adjusting your search filters.</p>
+                {isLoading ? (
+                    <div className="flex justify-center items-center py-32">
+                        <div className="w-12 h-12 border-4 border-zinc-200 border-t-green-600 rounded-full animate-spin"></div>
                     </div>
+                ) : (
+                    <>
+                        {/* Grid */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <AnimatePresence mode="popLayout">
+                                {paginatedSolutions.map((solution) => (
+                                    <SolutionCard key={solution.id} solution={solution} />
+                                ))}
+                            </AnimatePresence>
+                        </div>
+
+                        <PaginationControl
+                            currentPage={currentPage}
+                            totalPages={totalPages}
+                            onPageChange={setCurrentPage}
+                        />
+
+                        {solutions.length === 0 && (
+                            <div className="text-center py-20">
+                                <div className="w-16 h-16 bg-zinc-100 dark:bg-zinc-900 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <Search className="w-8 h-8 text-zinc-400" />
+                                </div>
+                                <h3 className="text-xl font-bold mb-2">No solutions found</h3>
+                                <p className="text-zinc-500">Try adjusting your search filters.</p>
+                            </div>
+                        )}
+                    </>
                 )}
             </main>
-        </div>
+        </div >
     );
 }
 
 function SolutionCard({ solution }: { solution: Solution }) {
     const SectorIcon = sectorIcons[solution.sector] || Briefcase;
 
-    return (
+    return solution && (
         <motion.div
             layout
             initial={{ opacity: 0, scale: 0.9 }}
@@ -131,7 +175,7 @@ function SolutionCard({ solution }: { solution: Solution }) {
                     solution.type === 'NGO' ? "bg-orange-500" :
                         solution.type === 'Business' ? "bg-blue-600" : "bg-purple-600"
                 )}>
-                    {solution.name.charAt(0)}
+                    {(solution.name || "?").charAt(0)}
                 </div>
                 <div className="px-3 py-1 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5">
                     <SectorIcon className="w-3.5 h-3.5" />
@@ -142,7 +186,7 @@ function SolutionCard({ solution }: { solution: Solution }) {
             <div className="mb-4">
                 <Link href={`/solutions/${solution.id}`} className="block">
                     <h3 className="text-2xl font-bold text-zinc-900 dark:text-white mb-2 group-hover:text-green-600 dark:group-hover:text-green-500 transition-colors">
-                        {solution.name}
+                        {solution.name || "Untitled Solution"}
                     </h3>
                 </Link>
                 <p className="text-sm font-medium text-zinc-500 dark:text-zinc-400 mb-2 uppercase tracking-wide">
@@ -155,7 +199,7 @@ function SolutionCard({ solution }: { solution: Solution }) {
 
             <div className="mt-auto pt-6 border-t border-zinc-100 dark:border-zinc-800 space-y-4">
                 {/* Problem */}
-                <div className="bg-red-50 dark:bg-red-900/10 p-3 rounded-xl border border-red-100 dark:border-red-900/20">
+                <div className="bg-red-50 h-20 dark:bg-red-900/10 p-3 rounded-xl border border-red-100 dark:border-red-900/20">
                     <span className="block text-xs font-bold text-red-600 dark:text-red-400 mb-1">PROBLEM SOLVING</span>
                     <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300 leading-tight">
                         {solution.problemSolved}

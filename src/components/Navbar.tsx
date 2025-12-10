@@ -11,11 +11,11 @@ import { logout } from "@/actions/auth";
 import { useAuth } from "@/context/AuthProvider";
 
 const navLinks = [
-    { name: "Map", href: "/map" },
     { name: "News", href: "/news" },
     { name: "Officials", href: "/officials" },
     { name: "Proposals", href: "/proposals" },
     { name: "Solutions", href: "/solutions" },
+    { name: "Map", href: "/map" },
 ];
 
 const Navbar = () => {
@@ -23,7 +23,6 @@ const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [isProfileOpen, setIsProfileOpen] = useState(false);
 
-    // Use the custom Auth Hook
     const { user, refreshUser } = useAuth();
 
     const searchParams = useSearchParams();
@@ -31,12 +30,11 @@ const Navbar = () => {
 
     useEffect(() => {
         if (searchParams.get("login_success")) {
-            // Trigger refresh to ensure client state matches server cookie
             refreshUser();
 
             toast.success("Welcome back! You have successfully logged in.", {
                 style: {
-                    background: '#10B981',
+                    background: '#2e7d32',
                     color: '#fff',
                     padding: '16px',
                     borderRadius: '12px',
@@ -47,12 +45,10 @@ const Navbar = () => {
                     secondary: '#10B981',
                 },
             });
-            // Update URL using Next.js router to clear searchParams matching
             router.replace(pathname);
         }
 
         if (searchParams.get("signup_success")) {
-            // Trigger refresh
             refreshUser();
 
             toast.success("Account created! Welcome to the movement.", {
@@ -74,7 +70,6 @@ const Navbar = () => {
 
     const handleLogout = async () => {
         await logout();
-        // Refresh auth state instantly
         await refreshUser();
 
         toast.success("You have been logged out.", {

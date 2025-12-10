@@ -5,8 +5,10 @@ import { addComment } from "@/actions/proposals";
 import { ShieldCheck, ThumbsUp } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import DeleteCommentButton from "./DeleteCommentButton";
 
-export default function CommentSection({ proposalId, comments, currentUser }: { proposalId: string, comments: any[], currentUser: any }) {
+
+export default function CommentSection({ proposalId, comments, currentUser, isAdmin }: { proposalId: string, comments: any[], currentUser: any, isAdmin: boolean }) {
     const [commentText, setCommentText] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
     const router = useRouter();
@@ -29,7 +31,7 @@ export default function CommentSection({ proposalId, comments, currentUser }: { 
     };
 
     return (
-        <div className="max-w-3xl mx-auto">
+        <div className="max-w-4xl mx-auto">
             <h3 className="text-2xl font-bold mb-6 flex items-center gap-2">
                 Comments <span className="text-zinc-400 text-lg font-normal">({comments.length})</span>
             </h3>
@@ -84,9 +86,14 @@ export default function CommentSection({ proposalId, comments, currentUser }: { 
                             )}
                         </div>
                         <div className="flex-1">
-                            <div className="flex items-center gap-2 mb-1">
-                                <span className="font-bold text-zinc-900 dark:text-white">{comment.author}</span>
-                                <span className="text-xs text-zinc-500">• {new Date(comment.createdAt).toLocaleDateString()}</span>
+                            <div className="flex items-center justify-between gap-2 mb-1">
+                                <div className="flex items-center gap-2">
+                                    <span className="font-bold text-zinc-900 dark:text-white">{comment.author}</span>
+                                    <span className="text-xs text-zinc-500">• {new Date(comment.createdAt).toLocaleDateString()}</span>
+                                </div>
+                                {isAdmin && (
+                                    <DeleteCommentButton commentId={comment.id} />
+                                )}
                             </div>
                             <p className="text-zinc-600 dark:text-zinc-300 leading-relaxed">
                                 {comment.content}

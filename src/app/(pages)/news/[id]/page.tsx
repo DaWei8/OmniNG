@@ -16,20 +16,21 @@ interface PageProps {
 
 export default function NewsDetailPage({ params }: PageProps) {
     const { id } = use(params);
-    const newsItem = newsData.find((n) => n.id === id);
+    const decodedName = decodeURIComponent(id);
+    const newsItem = newsData.find((n) => n.title === decodedName);
 
     if (!newsItem) {
         notFound();
     }
 
     const relatedNews = newsData
-        .filter((n) => n.category === newsItem.category && n.id !== newsItem.id)
+        .filter((n) => n.category === newsItem.category && n.title !== newsItem.title)
         .slice(0, 3);
 
     return (
         <div className="min-h-screen bg-white dark:bg-black text-zinc-900 dark:text-white pb-20">
             {/* Nav Back Header */}
-            <div className="sticky top-14 z-40 bg-white/80 dark:bg-black/80 backdrop-blur-md border-b border-zinc-100 dark:border-zinc-800">
+            <div className="sticky top-16 z-40 bg-white/80 dark:bg-black/80 backdrop-blur-md border-b border-zinc-100 dark:border-zinc-800">
                 <div className="max-w-4xl xl:max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
                     <Link href="/news" className="flex items-center gap-2 text-sm font-medium text-zinc-600 dark:text-zinc-400 hover:text-green-700 dark:hover:text-green-700 transition-colors">
                         <ArrowLeft className="w-4 h-4" />

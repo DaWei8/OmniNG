@@ -1,6 +1,4 @@
 import { createClient } from "@/utils/supabase/server";
-import { cookies } from "next/headers";
-
 
 export type NewsItem = {
     id: string;
@@ -15,13 +13,12 @@ export type NewsItem = {
 };
 
 export async function getNewsItems(category?: string, page: number = 1) {
-    const cookieStore = await cookies();
-    const supabase = createClient(cookieStore);
+    const supabase = createClient();
     const LIMIT = 20;
     const from = (page - 1) * LIMIT;
     const to = from + LIMIT - 1;
 
-    let query = supabase
+    let query = (await supabase)
         .from("news_items")
         .select("*")
         .eq("is_published", true)

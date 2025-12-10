@@ -1,11 +1,8 @@
-"use client";
-
-import { use } from 'react';
 import { notFound } from 'next/navigation';
-import { solutionsData } from '@/data/solutionsData';
 import { ArrowLeft, Globe, MapPin, Calendar, ExternalLink, Leaf, GraduationCap, HeartPulse, Truck, Wallet, Briefcase, Zap, Lightbulb, CheckCircle, Tag } from 'lucide-react';
 import Link from 'next/link';
 import clsx from 'clsx';
+import { getSolutionById, getSolutions } from '@/actions/solutions';
 
 interface PageProps {
     params: Promise<{ id: string }>;
@@ -22,9 +19,9 @@ const sectorIcons: Record<string, React.ElementType> = {
     'Infrastructure': Briefcase
 };
 
-export default function SolutionDetailPage({ params }: PageProps) {
-    const { id } = use(params);
-    const solution = solutionsData.find((s) => s.id === id);
+export default async function SolutionDetailPage({ params }: PageProps) {
+    const { id } = await params;
+    const solution = await getSolutionById(id);
 
     if (!solution) {
         notFound();
@@ -32,14 +29,16 @@ export default function SolutionDetailPage({ params }: PageProps) {
 
     const SolutionIcon = sectorIcons[solution.sector] || Briefcase;
 
-    const similarSolutions = solutionsData
-        .filter(s => s.sector === solution.sector && s.id !== solution.id)
+    // Fetch all solutions to find similar ones (could be optimized later)
+    const allSolutions = await getSolutions("All");
+    const similarSolutions = allSolutions
+        .filter(s => s.sector === solution.sector && s.id !== solution.id) // Ensure ID check
         .slice(0, 3);
 
     return (
         <div className="min-h-screen bg-zinc-50 dark:bg-black text-zinc-900 dark:text-white pb-20">
             {/* Nav Back Header */}
-            <div className="sticky top-14 z-40 bg-zinc-50/80 dark:bg-black/80 backdrop-blur-md border-b border-zinc-200 dark:border-zinc-800">
+            <div className="sticky top-16 z-40 bg-zinc-50/80 dark:bg-black/80 backdrop-blur-md border-b border-zinc-200 dark:border-zinc-800">
                 <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
                     <Link href="/solutions" className="flex items-center gap-2 text-sm font-medium text-zinc-600 dark:text-zinc-400 hover:text-green-700 dark:hover:text-green-700 transition-colors">
                         <ArrowLeft className="w-4 h-4" />
@@ -103,7 +102,7 @@ export default function SolutionDetailPage({ params }: PageProps) {
                                 href={solution.website}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="inline-flex items-center gap-2 px-6 py-3 bg-zinc-900 dark:bg-white text-white dark:text-black rounded-xl font-bold hover:bg-green-700 dark:hover:bg-green-500 hover:text-white dark:hover:text-white transition-colors shadow-lg"
+                                className="inline-flex items-center gap-2 px-6 py-3 bg-zinc-900 dark:bg-white text-white dark:text-black rounded-xl font-bold hover:bg-green-800 dark:hover:bg-green-800 hover:text-white dark:hover:text-white transition-colors shadow-lg"
                             >
                                 Visit Website
                                 <ExternalLink className="w-4 h-4" />

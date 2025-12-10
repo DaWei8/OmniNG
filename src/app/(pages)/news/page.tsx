@@ -1,11 +1,13 @@
 "use client";
 
-import { useState } from 'react';
-import { newsData, NewsCategory } from '@/data/newsData';
+import { useState, useEffect } from 'react';
+import { NewsCategory, NewsItem } from '@/data/newsData';
+import { getNews } from '@/actions/news';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Calendar, Clock, Globe, Shield, TrendingUp, Landmark, Zap, BookOpen } from 'lucide-react';
 import clsx from 'clsx';
 import Link from 'next/link';
+import PaginationControl from '@/components/PaginationControl';
 
 export const categories: (NewsCategory | 'All')[] = [
     'All',
@@ -36,7 +38,7 @@ export const categoryIcons: Record<NewsCategory, any> = {
     'Economic': TrendingUp,
     'Political': Landmark,
     'Geopolitical': Globe,
-    'Financial': TrendingUp, // optimize
+    'Financial': TrendingUp,
     'Technology': Zap,
     'Security': Shield,
     'Religious': BookOpen,
@@ -47,13 +49,41 @@ export const categoryIcons: Record<NewsCategory, any> = {
 export default function NewsPage() {
     const [activeCategory, setActiveCategory] = useState<NewsCategory | 'All'>('All');
     const [searchQuery, setSearchQuery] = useState('');
+    const [newsItems, setNewsItems] = useState<NewsItem[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
 
-    const filteredNews = newsData.filter(item => {
-        const matchesCategory = activeCategory === 'All' || item.category === activeCategory;
-        const matchesSearch = item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            item.summary.toLowerCase().includes(searchQuery.toLowerCase());
-        return matchesCategory && matchesSearch;
-    });
+    useEffect(() => {
+        let mounted = true;
+        const fetchNewsData = async () => {
+            setIsLoading(true);
+            try {
+                const data = await getNews(activeCategory, searchQuery);
+                if (mounted) {
+                    setNewsItems(data);
+                }
+            } catch (error) {
+                console.error("Failed to fetch news:", error);
+            } finally {
+                if (mounted) setIsLoading(false);
+            }
+        };
+
+        fetchNewsData();
+        return () => { mounted = false; };
+    }, [activeCategory, searchQuery]);
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const ITEMS_PER_PAGE = 30;
+
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [activeCategory, searchQuery]);
+
+    const totalPages = Math.ceil(newsItems.length / ITEMS_PER_PAGE);
+    const paginatedNews = newsItems.slice(
+        (currentPage - 1) * ITEMS_PER_PAGE,
+        currentPage * ITEMS_PER_PAGE
+    );
 
     return (
         <div className="min-h-screen bg-zinc-50 dark:bg-black text-zinc-900 dark:text-white pb-20">
@@ -107,64 +137,79 @@ export default function NewsPage() {
 
             {/* Main Content */}
             <main className="max-w-5xl xl:max-w-7xl pt-6 px-5 mx-auto relative ">
-                {/* News Grid */}
-                <motion.div
-                    layout
-                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
-                >
-                    <AnimatePresence>
-                        {filteredNews.map((item) => {
-                            const Icon = categoryIcons[item.category] || BookOpen;
-                            return (
-                                <Link href={`/news/${item.id}`} key={item.id} className="block h-full">
-                                    <motion.div
-                                        layout
-                                        initial={{ opacity: 0, scale: 0.9 }}
-                                        animate={{ opacity: 1, scale: 1 }}
-                                        exit={{ opacity: 0, scale: 0.9 }}
-                                        transition={{ duration: 0.2 }}
-                                        className="group bg-white dark:bg-zinc-900 rounded-2xl p-6 border border-zinc-100 dark:border-zinc-800 hover:shadow-xl dark:hover:shadow-zinc-900/50 hover:border-zinc-200 dark:hover:border-zinc-700 transition-all duration-300 cursor-pointer flex flex-col h-full"
-                                    >
-                                        <div className="flex justify-between items-start mb-4">
-                                            <span className={clsx(
-                                                "px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider",
-                                                categoryColors[item.category]
-                                            )}>
-                                                {item.category}
-                                            </span>
-                                            <div className="p-2 rounded-full bg-zinc-50 dark:bg-zinc-800 group-hover:scale-110 transition-transform">
-                                                <Icon className="w-4 h-4 text-zinc-400 dark:text-zinc-500" />
-                                            </div>
-                                        </div>
-
-                                        <h3 className="text-xl font-bold text-zinc-900 dark:text-white mb-3 leading-tight group-hover:text-green-700 dark:group-hover:text-green-700 transition-colors">
-                                            {item.title}
-                                        </h3>
-
-                                        <p className="text-zinc-600 dark:text-zinc-400 text-sm leading-relaxed mb-6 grow">
-                                            {item.summary}
-                                        </p>
-
-                                        <div className="mt-auto pt-4 border-t border-zinc-100 dark:border-zinc-800 flex items-center justify-between text-xs text-zinc-500 font-medium">
-                                            <div className="flex items-center gap-2">
-                                                <Calendar className="w-3.5 h-3.5" />
-                                                {item.date}
-                                            </div>
-                                            <div className="flex items-center gap-2">
-                                                <Clock className="w-3.5 h-3.5" />
-                                                {item.readTime || '3 min read'}
-                                            </div>
-                                        </div>
-                                    </motion.div>
-                                </Link>
-                            )
-                        })}
-                    </AnimatePresence>
-                </motion.div>
-                {filteredNews.length === 0 && (
-                    <div className="text-center py-20">
-                        <p className="text-zinc-500 text-lg">No news found matching your criteria.</p>
+                {isLoading ? (
+                    <div className="flex justify-center items-center py-32">
+                        <div className="w-12 h-12 border-4 border-green-200 border-t-green-700 rounded-full animate-spin"></div>
                     </div>
+                ) : (
+                    <>
+                        {/* News Grid */}
+                        <motion.div
+                            layout
+                            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+                        >
+                            <AnimatePresence>
+                                {paginatedNews.map((item) => {
+                                    const Icon = categoryIcons[item.category] || BookOpen;
+                                    return (
+                                        <Link href={`/news/${item.title}`} key={item.id} className="block h-full">
+                                            <motion.div
+                                                layout
+                                                initial={{ opacity: 0, scale: 0.9 }}
+                                                animate={{ opacity: 1, scale: 1 }}
+                                                exit={{ opacity: 0, scale: 0.9 }}
+                                                transition={{ duration: 0.2 }}
+                                                className="group bg-white dark:bg-zinc-900 rounded-2xl p-6 border border-zinc-100 dark:border-zinc-800 hover:shadow-xl dark:hover:shadow-zinc-900/50 hover:border-zinc-200 dark:hover:border-zinc-700 transition-all duration-300 cursor-pointer flex flex-col h-full"
+                                            >
+                                                <div className="flex justify-between items-start mb-4">
+                                                    <span className={clsx(
+                                                        "px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider",
+                                                        categoryColors[item.category]
+                                                    )}>
+                                                        {item.category}
+                                                    </span>
+                                                    <div className="p-2 rounded-full bg-zinc-50 dark:bg-zinc-800 group-hover:scale-110 transition-transform">
+                                                        <Icon className="w-4 h-4 text-zinc-400 dark:text-zinc-500" />
+                                                    </div>
+                                                </div>
+
+                                                <h3 className="text-xl font-bold text-zinc-900 dark:text-white mb-3 leading-tight group-hover:text-green-700 dark:group-hover:text-green-700 transition-colors">
+                                                    {item.title}
+                                                </h3>
+
+                                                <p className="text-zinc-600 dark:text-zinc-400 text-sm leading-relaxed mb-6 grow">
+                                                    {item.summary}
+                                                </p>
+
+                                                <div className="mt-auto pt-4 border-t border-zinc-100 dark:border-zinc-800 flex items-center justify-between text-xs text-zinc-500 font-medium">
+                                                    <div className="flex items-center gap-2">
+                                                        <Calendar className="w-3.5 h-3.5" />
+                                                        {item.date}
+                                                    </div>
+                                                    <div className="flex items-center gap-2">
+                                                        <Clock className="w-3.5 h-3.5" />
+                                                        {item.readTime || '3 min read'}
+                                                    </div>
+                                                </div>
+                                            </motion.div>
+                                        </Link>
+                                    )
+                                })}
+                            </AnimatePresence>
+                        </motion.div>
+
+                        <PaginationControl
+                            currentPage={currentPage}
+                            totalPages={totalPages}
+                            onPageChange={setCurrentPage}
+                        />
+
+                        {newsItems.length === 0 && (
+                            <div className="text-center py-20">
+                                <p className="text-zinc-500 text-lg">No news found matching your criteria.</p>
+                            </div>
+                        )}
+                    </>
                 )}
             </main>
         </div>

@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { FaFacebook, FaInstagram, FaTwitter } from 'react-icons/fa';
+import Image from 'next/image';
 
 interface PageProps {
     params: Promise<{ id: string }>;
@@ -25,7 +26,6 @@ export default function OfficialDetailPage({ params }: PageProps) {
     }
 
     const sortedOfficials = [...officialsData].sort((a, b) => b.rating - a.rating);
-    const overallRank = sortedOfficials.findIndex(o => o.name === decodedName) + 1;
 
     const roleOfficials = officialsData.filter(o => o.role === official.role).sort((a, b) => b.rating - a.rating);
     const roleRank = roleOfficials.findIndex(o => o.name === decodedName) + 1;
@@ -33,7 +33,7 @@ export default function OfficialDetailPage({ params }: PageProps) {
     return (
         <div className="min-h-screen relative bg-zinc-50 dark:bg-black text-zinc-900 dark:text-white pb-20">
             {/* Nav Back Header */}
-            <div className="sticky top-14 z-40 bg-white/80 dark:bg-black/80 backdrop-blur-md border-b border-zinc-200 dark:border-zinc-800">
+            <div className="sticky top-16 z-40 bg-white/80 dark:bg-black/80 backdrop-blur-md border-b border-zinc-200 dark:border-zinc-800">
                 <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
                     <Link href="/officials" className="flex items-center gap-2 text-sm font-medium text-zinc-600 dark:text-zinc-400 hover:text-green-700 dark:hover:text-green-700 transition-colors">
                         <ArrowLeft className="w-4 h-4" />
@@ -47,18 +47,18 @@ export default function OfficialDetailPage({ params }: PageProps) {
                 <div className="bg-white dark:bg-zinc-900 rounded-3xl p-6 md:p-10 border border-zinc-200 dark:border-zinc-800 shadow-sm mb-8 flex flex-col md:flex-row gap-8 items-start">
                     {/* Profile Image */}
                     <div className="w-full md:w-64 h-64 md:h-80 rounded-2xl overflow-hidden bg-zinc-200 dark:bg-zinc-800 shrink-0 relative">
-                        {/* {official.image ? (
+                        {official.image ? (
                             <Image
                                 src={official.image}
                                 alt={official.name}
                                 fill
                                 className="object-cover"
                             />
-                        ) : ( */}
-                        <div className="w-full h-full flex items-center justify-center">
-                            <span className="text-6xl font-bold text-zinc-400">{official.name.charAt(0)}</span>
-                        </div>
-
+                        ) : (
+                            <div className="w-full h-full flex items-center justify-center">
+                                <span className="text-6xl font-bold text-zinc-400">{official.name.charAt(0)}</span>
+                            </div>
+                        )}
                         <div className="absolute bottom-4 right-4 bg-white/90 dark:bg-black/90 backdrop-blur-sm px-3 py-1.5 rounded-lg flex items-center gap-1.5 shadow-lg border border-zinc-200 dark:border-zinc-800">
                             <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
                             <span className="font-bold">{official.rating || "N/A"}</span>
@@ -85,13 +85,9 @@ export default function OfficialDetailPage({ params }: PageProps) {
                                     <span className="block text-xs font-bold text-zinc-500 uppercase">Party</span>
                                     <span className="text-xl font-bold">{official.party}</span>
                                 </div>
-                                <div className="px-4 py-2 rounded-xl bg-orange-50 dark:bg-orange-900/20 text-center min-w-[80px]">
-                                    <span className="block text-xs font-bold text-orange-700 dark:text-orange-400 uppercase">Rank (All)</span>
-                                    <span className="text-xl font-bold text-orange-700 dark:text-orange-400">#{overallRank}</span>
-                                </div>
                                 <div className="px-4 py-2 rounded-xl bg-blue-50 dark:bg-blue-900/20 text-center min-w-[80px]">
-                                    <span className="block text-xs font-bold text-blue-700 dark:text-blue-400 uppercase">Rank ({official.role === 'Governor' ? 'Gov' : official.role})</span>
-                                    <span className="text-xl font-bold text-blue-700 dark:text-blue-400">#{roleRank}</span>
+                                    <span className="block text-xs font-bold text-blue-700 dark:text-blue-400 uppercase">Role</span>
+                                    <span className="text-xl font-bold text-blue-700 dark:text-blue-400">{official.role === 'Governor' ? 'Gov' : official.role}</span>
                                 </div>
                             </div>
                         </div>
@@ -185,13 +181,13 @@ export default function OfficialDetailPage({ params }: PageProps) {
                                 <div>
                                     <div className="text-xs text-zinc-500 mb-1">Estimated Net Worth</div>
                                     <div className="text-xl font-mono font-bold text-zinc-900 dark:text-white">
-                                        {official.financials?.estimatedNetWorth || "Not Publicly Available"}
+                                        {`${official.financials?.estimatedNetWorth} (EST)` || "Not Publicly Available"}
                                     </div>
                                 </div>
                                 <div className="pt-3 border-t border-zinc-100 dark:border-zinc-800">
                                     <div className="text-xs text-zinc-500 mb-1">Est. Government Allowance</div>
                                     <div className="text-base font-mono font-medium text-zinc-700 dark:text-zinc-300">
-                                        {official.financials?.allowances || "Standard Official Scale"}
+                                        {`${official.financials?.allowances} (EST)` || "Standard Official Scale"}
                                     </div>
                                 </div>
                                 <div className="text-[10px] text-zinc-400 italic mt-2">

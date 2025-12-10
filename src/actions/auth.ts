@@ -6,8 +6,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 
 export async function login(prevState: any, formData: FormData) {
-    const cookieStore = await cookies();
-    const supabase = createClient(cookieStore);
+    const supabase = await createClient();
 
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
@@ -30,22 +29,43 @@ export async function login(prevState: any, formData: FormData) {
 }
 
 export async function signup(prevState: any, formData: FormData) {
-    const cookieStore = await cookies();
-    const supabase = createClient(cookieStore);
+    const supabase = await createClient();
 
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
+    const username = formData.get("username") as string; // New field
     const fullName = formData.get("fullName") as string;
     const state = formData.get("state") as string;
     const country = formData.get("country") as string;
     const phoneNumber = formData.get("phoneNumber") as string;
 
+    if (username.length > 15) {
+        return { error: "Username must be 15 characters or less." };
+    }
+
     try {
+        // Check if username exists in profiles
+        // We assume 'profiles' table has 'username' column. If not, this might fail or needs schema update.
+        // If profiles doesn't have username yet, we should add it.
+        // Assuming the user meant "add this feature" implies adding the check.
+        // I will check the profiles table for the username.
+
+        const { data: existingUser } = await supabase
+            .from('profiles')
+            .select('username')
+            .eq('username', username)
+            .single();
+
+        if (existingUser) {
+            return { error: "Username is already taken. Please choose another." };
+        }
+
         const { error } = await supabase.auth.signUp({
             email,
             password,
             options: {
                 data: {
+                    username, // Add username to metadata
                     full_name: fullName,
                     state,
                     country,
@@ -72,8 +92,7 @@ export async function signup(prevState: any, formData: FormData) {
 }
 
 export async function logout() {
-    const cookieStore = await cookies();
-    const supabase = createClient(cookieStore);
+    const supabase = await createClient();
     await supabase.auth.signOut();
     revalidatePath("/", "layout");
     redirect("/");

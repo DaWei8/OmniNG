@@ -7,14 +7,12 @@ import clsx from "clsx";
 import CommentSection from "@/components/CommentSection";
 import VoteButton from "@/components/VoteButton";
 import { createClient } from "@/utils/supabase/server";
-import { cookies } from "next/headers";
 
 export const dynamic = 'force-dynamic';
 
-export default async function ProposalDetailPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function ProposalDetailPage({ params }: { params: { id: string } }) {
     const { id } = await params;
 
-    // Validate UUID format before fetching to prevent invalid input syntax for type uuid error
     const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
     if (!uuidRegex.test(id)) {
         notFound();
@@ -26,15 +24,18 @@ export default async function ProposalDetailPage({ params }: { params: Promise<{
         notFound();
     }
 
-    const cookieStore = await cookies();
-    const supabase = createClient(cookieStore);
+    const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
 
+    // Check for admin role
+    const { data: profile } = user ? await supabase.from("profiles").select("role").eq("id", user.id).single() : { data: null };
+    const isAdmin = profile?.role === 'admin';
+
     return (
-        <div className="min-h-screen bg-zinc-50 dark:bg-black text-zinc-900 dark:text-white pb-20">
+        <div className="min-h-screen relative bg-zinc-50 dark:bg-black text-zinc-900 dark:text-white pb-20">
             {/* Nav Back Header */}
-            <div className="sticky top-0 z-40 bg-white/80 dark:bg-black/80 backdrop-blur-md border-b border-zinc-200 dark:border-zinc-800">
-                <div className="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between">
+            <div className="sticky top-16 z-40 bg-white/80 dark:bg-black/80 backdrop-blur-md border-b border-zinc-200 dark:border-zinc-800">
+                <div className="max-w-5xl xl:max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
                     <Link href="/proposals" className="flex items-center gap-2 text-sm font-medium text-zinc-600 dark:text-zinc-400 hover:text-green-700 dark:hover:text-green-700 transition-colors">
                         <ArrowLeft className="w-4 h-4" />
                         Back to Proposals
@@ -46,7 +47,7 @@ export default async function ProposalDetailPage({ params }: { params: Promise<{
                 </div>
             </div>
 
-            <main className="max-w-4xl mx-auto px-4 py-8">
+            <main className="max-w-5xl mx-auto px-4 py-8">
                 {/* Header Section */}
                 <div className="mb-8">
                     <div className="flex flex-wrap items-center gap-3 mb-4">
@@ -127,6 +128,7 @@ export default async function ProposalDetailPage({ params }: { params: Promise<{
                     proposalId={proposal.id}
                     comments={proposal.comments}
                     currentUser={user}
+                    isAdmin={isAdmin}
                 />
             </main>
         </div>

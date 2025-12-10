@@ -3,7 +3,7 @@ import { getProposals } from "@/actions/proposals";
 import ProposalList from "@/components/ProposalList";
 import ProposalFilters from "@/components/ProposalFilters";
 
-export const dynamic = 'force-dynamic'; // Since we are using searchParams and database
+export const dynamic = 'force-dynamic';
 
 export default async function ProposalsPage({ searchParams }: { searchParams: Promise<{ q?: string, category?: string }> }) {
     const { q, category } = await searchParams;
@@ -19,7 +19,7 @@ export default async function ProposalsPage({ searchParams }: { searchParams: Pr
 
                 <div className="max-w-5xl xl:max-w-7xl px-5 mx-auto relative z-10">
                     <h1 className="text-4xl md:text-6xl font-black text-white mb-4 tracking-tight">
-                        Citizen <span className="text-green-500">Proposals</span>
+                        Ideas and <span className="text-green-500">Proposals</span>
                     </h1>
                     <p className="text-xl text-zinc-400 max-w-2xl mb-6">
                         Submit ideas, voice your opinion, and vote on policies that shape our future.

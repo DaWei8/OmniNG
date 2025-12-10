@@ -1,14 +1,12 @@
 "use server";
 
 import { createClient } from "@/utils/supabase/server";
-import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { NewsItemSchema } from "@/lib/schemas";
 import { ZodError } from "zod";
 
 export async function addNewsItem(prevState: unknown, formData: FormData) {
-    const cookieStore = await cookies();
-    const supabase = createClient(cookieStore);
+    const supabase = await createClient();
 
     // 1. Authenticate
     const { data: { user } } = await supabase.auth.getUser();
