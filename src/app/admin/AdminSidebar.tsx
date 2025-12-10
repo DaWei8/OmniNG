@@ -28,11 +28,11 @@ const navLink = [
     },
 ];
 
-export default function AdminSidebar() {
+export default function AdminSidebar({ className, onClose }: { className?: string, onClose?: () => void }) {
     const pathname = usePathname();
 
     return (
-        <aside className="w-64 h-screen sticky top-0 bg-white dark:bg-black border-r border-zinc-200 dark:border-zinc-800 hidden md:flex flex-col">
+        <aside className={clsx("w-64 h-screen bg-white dark:bg-black border-r border-zinc-200 dark:border-zinc-800 flex flex-col", className)}>
             <div className="p-6 border-b border-zinc-200 dark:border-zinc-800">
                 <Link href="/admin" className="text-xl font-bold text-green-600 flex items-center gap-2">
                     <LayoutDashboard className="w-6 h-6" />
@@ -49,6 +49,7 @@ export default function AdminSidebar() {
                         <Link
                             key={link.href}
                             href={link.href}
+                            onClick={onClose}
                             className={clsx("flex items-center gap-3 px-4 py-3 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-colors", {
                                 "bg-green-700-30 dark:bg-green-700-30 text-green-600 dark:text-green-400": isActive,
                             })}
