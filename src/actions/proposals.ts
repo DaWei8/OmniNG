@@ -55,7 +55,8 @@ export async function getProposal(id: string) {
         return null;
     }
 
-    const { data: { user } } = await supabase.auth.getUser();
+    const { data: { session } } = await supabase.auth.getSession();
+    const user = session?.user;
 
     return {
         ...proposal,
@@ -76,7 +77,8 @@ export async function getProposal(id: string) {
 export async function createProposal(prevState: any, formData: FormData) {
     const supabase = await createClient();
 
-    const { data: { user } } = await supabase.auth.getUser();
+    const { data: { session } } = await supabase.auth.getSession();
+    const user = session?.user;
 
     if (!user) {
         return { error: "You must be logged in to create a proposal." };
@@ -108,7 +110,8 @@ export async function addComment(proposalId: string, content: string) {
     const supabase = await createClient();
 
 
-    const { data: { user } } = await supabase.auth.getUser();
+    const { data: { session } } = await supabase.auth.getSession();
+    const user = session?.user;
     if (!user) throw new Error("Unauthorized");
 
     const { error } = await supabase.from("comments").insert({
@@ -124,7 +127,8 @@ export async function addComment(proposalId: string, content: string) {
 export async function toggleVote(proposalId: string) {
     const supabase = await createClient();
 
-    const { data: { user } } = await supabase.auth.getUser();
+    const { data: { session } } = await supabase.auth.getSession();
+    const user = session?.user;
     if (!user) throw new Error("Unauthorized");
 
     // Check if exists

@@ -6,7 +6,7 @@ import { ShieldCheck, ThumbsUp } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import DeleteCommentButton from "./DeleteCommentButton";
-
+import { toast } from "react-hot-toast";
 
 export default function CommentSection({ proposalId, comments, currentUser, isAdmin }: { proposalId: string, comments: any[], currentUser: any, isAdmin: boolean }) {
     const [commentText, setCommentText] = useState("");
@@ -21,10 +21,11 @@ export default function CommentSection({ proposalId, comments, currentUser, isAd
         try {
             await addComment(proposalId, commentText);
             setCommentText("");
+            toast.success("Comment posted successfully");
             router.refresh(); // Refresh server components to see new comment
         } catch (error) {
             console.error(error);
-            alert("Failed to post comment. Please try again.");
+            toast.error("Failed to post comment. Please try again.");
         } finally {
             setIsSubmitting(false);
         }

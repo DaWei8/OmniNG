@@ -152,7 +152,7 @@ export default function NewsPage() {
                                 {paginatedNews.map((item) => {
                                     const Icon = categoryIcons[item.category] || BookOpen;
                                     return (
-                                        <Link href={`/news/${item.title}`} key={item.id} className="block h-full">
+                                        <Link href={`/news/${item.title.replace(/%/g, 'pcnt')}`} key={item.id} className="block h-full">
                                             <motion.div
                                                 layout
                                                 initial={{ opacity: 0, scale: 0.9 }}

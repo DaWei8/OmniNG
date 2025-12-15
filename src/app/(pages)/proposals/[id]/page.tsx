@@ -7,6 +7,7 @@ import clsx from "clsx";
 import CommentSection from "@/components/CommentSection";
 import VoteButton from "@/components/VoteButton";
 import { createClient } from "@/utils/supabase/server";
+import ShareButton from "@/components/ShareButton";
 
 export const dynamic = 'force-dynamic';
 
@@ -25,7 +26,8 @@ export default async function ProposalDetailPage({ params }: { params: { id: str
     }
 
     const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const { data: { session } } = await supabase.auth.getSession();
+    const user = session?.user;
 
     // Check for admin role
     const { data: profile } = user ? await supabase.from("profiles").select("role").eq("id", user.id).single() : { data: null };
@@ -35,15 +37,15 @@ export default async function ProposalDetailPage({ params }: { params: { id: str
         <div className="min-h-screen relative bg-zinc-50 dark:bg-black text-zinc-900 dark:text-white pb-20">
             {/* Nav Back Header */}
             <div className="sticky top-16 z-40 bg-white/80 dark:bg-black/80 backdrop-blur-md border-b border-zinc-200 dark:border-zinc-800">
-                <div className="max-w-5xl xl:max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+                <div className="max-w-4xl xl:max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
                     <Link href="/proposals" className="flex items-center gap-2 text-sm font-medium text-zinc-600 dark:text-zinc-400 hover:text-green-700 dark:hover:text-green-700 transition-colors">
                         <ArrowLeft className="w-4 h-4" />
                         Back to Proposals
                     </Link>
-                    <button className="flex items-center gap-2 text-sm font-medium text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors">
+                    <ShareButton title={proposal.title} className="flex items-center gap-2 text-sm font-medium text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors">
                         <Share2 className="w-4 h-4" />
                         Share
-                    </button>
+                    </ShareButton>
                 </div>
             </div>
 
@@ -104,7 +106,7 @@ export default async function ProposalDetailPage({ params }: { params: { id: str
                     {proposal.content && (
                         <div
                             className="prose dark:prose-invert max-w-none prose-lg prose-headings:font-bold prose-headings:tracking-tight prose-p:text-zinc-600 dark:prose-p:text-zinc-300 prose-a:text-green-700"
-                            dangerouslySetInnerHTML={{ __html: proposal.content }} // If content handles rich text
+                            dangerouslySetInnerHTML={{ __html: proposal.content }}
                         />
                     )}
 

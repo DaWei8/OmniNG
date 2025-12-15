@@ -4,6 +4,7 @@ import { createSolution, updateSolution } from "@/actions/admin"; // Need to che
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { toast } from "react-hot-toast";
 
 // Note: updateSolution is not yet in actions/admin.ts. I will need to add it. 
 // For now I will proceed assuming I will add it shortly.
@@ -28,15 +29,15 @@ export default function SolutionForm({ initialData }: { initialData?: any }) {
             if (initialData?.id) {
                 // This will fail until I add updateSolution
                 await updateSolution(initialData.id, formData);
-                alert("Solution updated successfully!");
+                toast.success("Solution updated successfully!");
             } else {
                 await createSolution(formData);
-                alert("Solution created successfully!");
+                toast.success("Solution created successfully!");
             }
             router.push("/admin/solutions");
             router.refresh();
-        } catch (error) {
-            alert("Error: " + error);
+        } catch (error: any) {
+            toast.error(error.message || "Failed to save solution");
         } finally {
             setLoading(false);
         }

@@ -21,29 +21,50 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [loading, setLoading] = useState(true);
     const supabase = createClient();
 
-    const refreshUser = useCallback(async () => {
-        const { data: { user } } = await supabase.auth.getUser();
-        setUser(user);
+    // Helper to handle refresh token errors safely
+    const handleRefreshTokenError = useCallback(async () => {
+        console.warn("Refresh token error detected - signing out to clear invalid tokens");
+        await supabase.auth.signOut();
+        setUser(null);
         setLoading(false);
-    }, []);
+    }, [supabase]);
+
+    const refreshUser = useCallback(async () => {
+        try {
+            const { data, error } = await supabase.auth.getSession();
+
+            if (error?.code === 'refresh_token_already_used' || error?.message?.includes('Refresh Token')) {
+                await handleRefreshTokenError();
+                return;
+            }
+
+            setUser(data.session?.user ?? null);
+        } catch (err: any) {
+            if (err?.code === 'refresh_token_already_used' || err?.message?.includes('Refresh Token')) {
+                await handleRefreshTokenError();
+                return;
+            }
+            console.error("Error refreshing user:", err);
+        } finally {
+            setLoading(false);
+        }
+    }, [supabase, handleRefreshTokenError]);
 
     useEffect(() => {
-        refreshUser();
-
         const { data: { subscription } } = supabase.auth.onAuthStateChange(
-            async (_event, session) => {
-                // Determine user state from session
-                if (session?.user) {
-                    setUser(session.user);
-                } else {
-                    setUser(null);
-                }
+            (event, session) => {
+                // Should we handle strict events? 
+                // For now, simple binding is best.
+                setUser(session?.user ?? null);
                 setLoading(false);
             }
         );
 
+        // Initial fetch
+        refreshUser();
+
         return () => subscription.unsubscribe();
-    }, []);
+    }, [refreshUser, supabase]);
 
     return (
         <AuthContext.Provider value={{ user, loading, refreshUser }}>

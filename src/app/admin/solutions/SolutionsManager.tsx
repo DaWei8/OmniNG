@@ -3,6 +3,7 @@
 import { createSolution, deleteSolution } from "@/actions/admin";
 import { useState } from "react";
 import { Loader2, Trash2 } from "lucide-react";
+import { toast } from "react-hot-toast";
 
 export default function SolutionsManager({ solutions }: { solutions: any[] }) {
     const [loading, setLoading] = useState(false);
@@ -11,9 +12,9 @@ export default function SolutionsManager({ solutions }: { solutions: any[] }) {
         setLoading(true);
         try {
             await createSolution(formData);
-            alert("Solution added successfully!");
-        } catch (error) {
-            alert("Error adding solution: " + error);
+            toast.success("Solution added successfully!");
+        } catch (error: any) {
+            toast.error(error.message || "Error adding solution");
         } finally {
             setLoading(false);
         }
@@ -23,8 +24,9 @@ export default function SolutionsManager({ solutions }: { solutions: any[] }) {
         if (!confirm("Delete this solution?")) return;
         try {
             await deleteSolution(id);
-        } catch (error) {
-            alert("Error: " + error);
+            toast.success("Solution deleted");
+        } catch (error: any) {
+            toast.error(error.message || "Error deleting solution");
         }
     }
 

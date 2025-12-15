@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Urbanist } from "next/font/google";
 import "./globals.css";
+import { Toaster } from "react-hot-toast";
 
 const urbanist = Urbanist({
   subsets: ["latin"],
@@ -23,6 +24,7 @@ export default function RootLayout({
         className={`antialiased min-h-screen relative bg-zinc-50 dark:bg-black text-zinc-900 dark:text-white font-sans`}
       >
         {children}
+        <Toaster position="top-right" />
       </body>
     </html>
   );

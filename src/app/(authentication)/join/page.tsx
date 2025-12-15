@@ -20,7 +20,6 @@ export default function JoinPage() {
                     <h1 className="text-3xl font-black text-zinc-900 dark:text-white mb-2">Create Account</h1>
                     <p className="text-zinc-500">Join the conversation and shape the future.</p>
                 </div>
-
                 <form action={formAction} className="space-y-4">
                     {state?.error && (
                         <div className="p-3 bg-red-50 dark:bg-red-900/20 text-red-600 text-sm font-medium rounded-xl border border-red-100 dark:border-red-900/50">
@@ -41,7 +40,6 @@ export default function JoinPage() {
                                 className="w-full px-4 py-3 rounded-xl bg-zinc-50 dark:bg-black border border-zinc-200 dark:border-zinc-800 focus:outline-none focus:ring-2 focus:ring-green-500 transition-all"
                             />
                         </div>
-
                         <div>
                             <label className="block text-sm font-bold text-zinc-700 dark:text-zinc-300 mb-1">
                                 Full Name

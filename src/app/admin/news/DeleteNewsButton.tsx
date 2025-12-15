@@ -1,27 +1,24 @@
 "use client";
 
-import { deleteProposal } from "@/actions/admin";
+import { deleteNews } from "@/actions/admin";
 import { Trash2, AlertTriangle, Loader2 } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import AdminModal from "@/components/admin/AdminModal";
+import { useRouter } from "next/navigation";
 
-export default function DeleteProposalButton({ proposalId }: { proposalId: string }) {
+export default function DeleteNewsButton({ newsId }: { newsId: string }) {
     const [isPromptOpen, setIsPromptOpen] = useState(false);
-    const [reason, setReason] = useState("");
     const [loading, setLoading] = useState(false);
+    const router = useRouter();
 
     async function handleDelete() {
-        if (!reason.trim()) {
-            toast.error("Please provide a reason.");
-            return;
-        }
-
         setLoading(true);
         try {
-            await deleteProposal(proposalId, reason);
-            toast.success("Proposal removed");
+            await deleteNews(newsId);
+            toast.success("Article deleted");
             setIsPromptOpen(false);
+            router.refresh();
         } catch (error: any) {
             toast.error(error.message);
         } finally {
@@ -33,16 +30,16 @@ export default function DeleteProposalButton({ proposalId }: { proposalId: strin
         <>
             <button
                 onClick={() => setIsPromptOpen(true)}
-                title="Delete / Censor"
-                className="p-2 bg-red-50 dark:bg-red-900/20 text-red-600 rounded-lg hover:bg-red-100 dark:hover:bg-red-900/40 transition-colors"
+                title="Delete"
+                className="p-2 text-red-600 bg-red-50 dark:bg-red-900/20 rounded-lg hover:bg-red-100 dark:hover:bg-red-900/40 transition-colors"
             >
-                <Trash2 className="w-5 h-5" />
+                <Trash2 className="w-4 h-4" />
             </button>
 
             <AdminModal
                 isOpen={isPromptOpen}
                 onClose={() => setIsPromptOpen(false)}
-                title="Remove Content"
+                title="Delete Article"
                 footer={
                     <>
                         <button
@@ -57,7 +54,7 @@ export default function DeleteProposalButton({ proposalId }: { proposalId: strin
                             className="px-4 py-2 text-sm bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50 flex items-center gap-2"
                         >
                             {loading && <Loader2 className="w-4 h-4 animate-spin" />}
-                            {loading ? "Removing..." : "Confirm Removal"}
+                            {loading ? "Deleting..." : "Confirm Delete"}
                         </button>
                     </>
                 }
@@ -66,23 +63,9 @@ export default function DeleteProposalButton({ proposalId }: { proposalId: strin
                     <div className="bg-red-50 dark:bg-red-900/20 text-red-800 dark:text-red-300 p-4 rounded-xl flex items-start gap-3">
                         <AlertTriangle className="w-5 h-5 shrink-0 mt-0.5" />
                         <div className="text-sm">
-                            <p className="font-bold">Warning</p>
-                            <p>This will replace the proposal content with a violation notice. The record will be preserved for audit purposes.</p>
+                            <p className="font-bold">Irreversible Action</p>
+                            <p>Are you sure you want to delete this news article? This action cannot be undone and the URL will no longer be accessible.</p>
                         </div>
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-bold text-zinc-700 dark:text-zinc-300 mb-1">
-                            Deletion Reason
-                        </label>
-                        <textarea
-                            value={reason}
-                            onChange={(e) => setReason(e.target.value)}
-                            placeholder="e.g. Hate speech, Spam, Misinformation..."
-                            className="w-full border border-zinc-200 dark:border-zinc-700 rounded-xl p-3 bg-zinc-50 dark:bg-black focus:ring-2 focus:ring-red-500 focus:outline-none transition-all"
-                            rows={3}
-                            autoFocus
-                        />
                     </div>
                 </div>
             </AdminModal>

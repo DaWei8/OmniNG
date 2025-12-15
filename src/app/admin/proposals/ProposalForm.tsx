@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import RichEditor from "@/components/RichEditor";
+import { toast } from "react-hot-toast";
 
 export default function ProposalForm({ initialData }: { initialData?: any }) {
     const [loading, setLoading] = useState(false);
@@ -17,15 +18,15 @@ export default function ProposalForm({ initialData }: { initialData?: any }) {
         try {
             if (initialData?.id) {
                 // await updateProposal(initialData.id, formData);
-                alert("Proposal update not implemented yet for admin.");
+                toast.error("Proposal update not implemented yet for admin.");
             } else {
                 await createProposal(null, formData);
-                alert("Proposal created successfully!");
+                toast.success("Proposal created successfully!");
             }
             router.push("/admin/proposals");
             router.refresh();
-        } catch (error) {
-            alert("Error: " + error);
+        } catch (error: any) {
+            toast.error(error.message || "Failed to submit proposal");
         } finally {
             setLoading(false);
         }

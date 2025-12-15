@@ -4,6 +4,7 @@ import { deleteComment } from "@/actions/admin";
 import { Trash2, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "react-hot-toast";
 
 export default function DeleteCommentButton({ commentId }: { commentId: string }) {
     const [loading, setLoading] = useState(false);
@@ -15,9 +16,10 @@ export default function DeleteCommentButton({ commentId }: { commentId: string }
         setLoading(true);
         try {
             await deleteComment(commentId);
+            toast.success("Comment deleted");
             router.refresh();
-        } catch (error) {
-            alert("Error: " + error);
+        } catch (error: any) {
+            toast.error(error.message || "Failed to delete comment");
         } finally {
             setLoading(false);
         }

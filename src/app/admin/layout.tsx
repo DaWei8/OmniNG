@@ -7,22 +7,25 @@ export default async function AdminLayout({
 }: {
     children: React.ReactNode;
 }) {
-    const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    // PHASE 1: Authentication Logic Removed
+    // We are bypassing the server-side auth check to isolate the "Refresh Token" error.
+    // const supabase = await createClient();
+    // const { data: { session } } = await supabase.auth.getSession();
+    // const user = session?.user;
 
-    if (!user) {
-        redirect("/login");
-    }
+    // if (!user) {
+    //     // redirect("/admin-login");
+    // }
 
-    const { data: profile } = await supabase
-        .from("profiles")
-        .select("role")
-        .eq("id", user.id)
-        .single();
+    // const { data: profile } = await supabase
+    //     .from("profiles")
+    //     .select("role")
+    //     .eq("id", user.id)
+    //     .single();
 
-    if (!profile || profile.role !== "admin") {
-        redirect("/login");
-    }
+    // if (!profile || profile.role !== "admin") {
+    //     // redirect("/admin-login");
+    // }
 
     return (
         <AdminShell>

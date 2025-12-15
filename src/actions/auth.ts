@@ -33,7 +33,7 @@ export async function signup(prevState: any, formData: FormData) {
 
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
-    const username = formData.get("username") as string; // New field
+    const username = formData.get("username") as string;
     const fullName = formData.get("fullName") as string;
     const state = formData.get("state") as string;
     const country = formData.get("country") as string;
@@ -44,12 +44,6 @@ export async function signup(prevState: any, formData: FormData) {
     }
 
     try {
-        // Check if username exists in profiles
-        // We assume 'profiles' table has 'username' column. If not, this might fail or needs schema update.
-        // If profiles doesn't have username yet, we should add it.
-        // Assuming the user meant "add this feature" implies adding the check.
-        // I will check the profiles table for the username.
-
         const { data: existingUser } = await supabase
             .from('profiles')
             .select('username')
@@ -65,7 +59,7 @@ export async function signup(prevState: any, formData: FormData) {
             password,
             options: {
                 data: {
-                    username, // Add username to metadata
+                    username,
                     full_name: fullName,
                     state,
                     country,
@@ -83,10 +77,6 @@ export async function signup(prevState: any, formData: FormData) {
         return { error: "Failed to connect to the server. Please check your internet connection." };
     }
 
-    // Supabase might require email confirmation.
-    // For dev, we might verify automatically or just redirect to a "Check email" page.
-    // Assuming auto-confirm or allow for now, but usually redirect to '/' works if session created.
-
     revalidatePath("/", "layout");
     redirect(`/check-email?email=${encodeURIComponent(email)}`);
 }
@@ -96,4 +86,45 @@ export async function logout() {
     await supabase.auth.signOut();
     revalidatePath("/", "layout");
     redirect("/");
+}
+
+export async function adminLogin(prevState: any, formData: FormData) {
+    const supabase = await createClient();
+
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
+
+    try {
+        const { data, error: signInError } = await supabase.auth.signInWithPassword({
+            email,
+            password,
+        });
+
+        if (signInError) {
+            return { error: "Invalid credentials." };
+        }
+
+        const user = data.user;
+        if (!user) {
+            return { error: "Authentication failed." };
+        }
+
+        const { data: profile } = await supabase
+            .from("profiles")
+            .select("role")
+            .eq("id", user.id)
+            .single();
+
+        if (!profile || profile.role !== "admin") {
+            await supabase.auth.signOut();
+            return { error: "Access denied: Restricted to Administrators." };
+        }
+
+    } catch (e) {
+        console.error("Admin Login Error:", e);
+        return { error: "System error during login." };
+    }
+
+    revalidatePath("/admin", "layout");
+    redirect("/admin");
 }

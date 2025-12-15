@@ -21,8 +21,15 @@ export default function MapPage() {
 
     const handleStateClick = (id: string) => {
         setViewedStateId(id);
-        const detailSection = document.getElementById('state-detail-section');
-        if (detailSection && window.innerWidth < 768) {
+        const detailSection = document.getElementById('state-detail-section-above-fold');
+        if (detailSection) {
+            detailSection.scrollIntoView({ behavior: 'smooth' });
+        }
+    };
+
+    const gotoMap = () => {
+        const detailSection = document.getElementById('the-map-section');
+        if (detailSection) {
             detailSection.scrollIntoView({ behavior: 'smooth' });
         }
     };
@@ -55,7 +62,7 @@ export default function MapPage() {
                         Select a state to view details or compare metrics.
                     </p>
                     <div className="flex items-center gap-2 overflow-x-auto max-w-full pb-2 md:pb-0 scrollbar-hide">
-                        <div className="flex gap-2">
+                        <div id='category-buttons' className="flex gap-2">
                             {categories.map((cat) => (
                                 <button
                                     key={cat}
@@ -77,6 +84,7 @@ export default function MapPage() {
 
             <main className="max-w-5xl xl:max-w-7xl mx-auto px-4 py-8">
                 {/* Map Section */}
+                <div className='h-0 w-0' id='the-map-section'></div>
                 <section className=" p-4 md:p-8 mb-8">
                     <NigeriaMap
                         className="w-full h-full"
@@ -88,7 +96,7 @@ export default function MapPage() {
                             <Info className="w-4 h-4" />
                             <span>Click on any state to view aggregated data.</span>
                         </div>
-                        <div>
+                        <div id='state-detail-section-above-fold'>
                             Source: NBS, CBN, State Budget Offices (2024 Est.)
                         </div>
                     </div>
@@ -191,7 +199,7 @@ export default function MapPage() {
                                     })}
                                     {/* Fill empty slot if only 1 selected */}
                                     {comparisonList.length === 1 && (
-                                        <div className="p-4 text-zinc-400 text-sm italic flex items-center justify-center border-l border-dashed border-zinc-200 dark:border-zinc-800">
+                                        <div onClick={gotoMap} className="p-4 cursor-pointer hover:text-blue-400 dark:hover:text-blue-400 text-zinc-400 text-sm italic flex items-center justify-center border-l border-dashed border-zinc-200 dark:border-zinc-800 transition-colors">
                                             Select another
                                         </div>
                                     )}

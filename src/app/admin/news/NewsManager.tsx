@@ -4,14 +4,15 @@ import { createNews, deleteNews, updateNews } from "@/actions/admin";
 import { useState } from "react";
 import { Loader2, Trash2, Edit } from "lucide-react";
 import RichEditor from "@/components/RichEditor";
+import { toast } from "react-hot-toast";
 
 export default function AdminNewsPage({ news }: { news: any[] }) {
     const [isEditing, setIsEditing] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
-    const [formData, setFormData] = useState({ title: "", summary: "", content: "" });
+    const [formData, setFormData] = useState({ title: "", summary: "", content: "", category: "" });
 
     function resetForm() {
-        setFormData({ title: "", summary: "", content: "" });
+        setFormData({ title: "", summary: "", content: "", category: "" });
         setIsEditing(null);
     }
 
@@ -21,20 +22,21 @@ export default function AdminNewsPage({ news }: { news: any[] }) {
 
         const data = new FormData();
         data.append("title", formData.title);
+        data.append("category", formData.category);
         data.append("summary", formData.summary);
         data.append("content", formData.content);
 
         try {
             if (isEditing) {
                 await updateNews(isEditing, data);
-                alert("News updated successfully!");
+                toast.success("News updated successfully!");
             } else {
                 await createNews(data);
-                alert("News published successfully!");
+                toast.success("News published successfully!");
             }
             resetForm();
-        } catch (error) {
-            alert("Error: " + error);
+        } catch (error: any) {
+            toast.error(error.message || "Failed to save news");
         } finally {
             setLoading(false);
         }
@@ -44,8 +46,9 @@ export default function AdminNewsPage({ news }: { news: any[] }) {
         if (!confirm("Are you sure you want to delete this news article?")) return;
         try {
             await deleteNews(id);
-        } catch (error) {
-            alert("Error: " + error);
+            toast.success("News deleted successfully");
+        } catch (error: any) {
+            toast.error(error.message || "Failed to delete news");
         }
     }
 
@@ -53,6 +56,7 @@ export default function AdminNewsPage({ news }: { news: any[] }) {
         setIsEditing(article.id);
         setFormData({
             title: article.title,
+            category: article.category,
             summary: article.summary,
             content: article.content
         });
