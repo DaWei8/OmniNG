@@ -98,43 +98,113 @@ export default async function ProposalDetailPage({ params }: { params: { id: str
                 </div>
 
                 {/* Content Body */}
-                <div className="bg-white dark:bg-zinc-900 rounded-3xl p-6 md:p-10 border border-zinc-200 dark:border-zinc-800 shadow-sm mb-10">
-                    <p className="tex-xl font-medium leading-relaxed text-zinc-800 dark:text-zinc-200 mb-6">
-                        {proposal.summary}
-                    </p>
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-10">
+                    <div className="lg:col-span-2 space-y-8">
+                        {/* Summary Section */}
+                        <section className="bg-white dark:bg-zinc-900 rounded-3xl p-8 border border-zinc-200 dark:border-zinc-800 shadow-sm">
+                            <h2 className="text-xl font-bold mb-4 text-zinc-900 dark:text-white flex items-center gap-2">
+                                <span className="w-1.5 h-6 bg-green-500 rounded-full"></span>
+                                Executive Summary
+                            </h2>
+                            <p className="text-lg leading-relaxed text-zinc-600 dark:text-zinc-300">
+                                {proposal.summary}
+                            </p>
+                        </section>
 
-                    {proposal.content && (
-                        <div
-                            className="prose dark:prose-invert max-w-none prose-lg prose-headings:font-bold prose-headings:tracking-tight prose-p:text-zinc-600 dark:prose-p:text-zinc-300 prose-a:text-green-700"
-                            dangerouslySetInnerHTML={{ __html: proposal.content }}
-                        />
-                    )}
+                        {/* Problem Solution Section */}
+                        {proposal.problem_solution && (
+                            <section className="bg-white dark:bg-zinc-900 rounded-3xl p-8 border border-zinc-200 dark:border-zinc-800 shadow-sm">
+                                <h2 className="text-xl font-bold mb-4 text-zinc-900 dark:text-white flex items-center gap-2">
+                                    <span className="w-1.5 h-6 bg-blue-500 rounded-full"></span>
+                                    How it Solves the Problem
+                                </h2>
+                                <p className="text-lg leading-relaxed text-zinc-600 dark:text-zinc-300">
+                                    {proposal.problem_solution}
+                                </p>
+                            </section>
+                        )}
 
-                    {!proposal.content && proposal.description && (
-                        <p className="text-zinc-600 dark:text-zinc-300 leading-relaxed whitespace-pre-line">
-                            {proposal.description}
-                        </p>
-                    )}
+                        {/* Proposal Details Content */}
+                        <section className="bg-white dark:bg-zinc-900 rounded-3xl p-8 border border-zinc-200 dark:border-zinc-800 shadow-sm">
+                            <h2 className="text-xl font-bold mb-6 text-zinc-900 dark:text-white flex items-center gap-2">
+                                <span className="w-1.5 h-6 bg-purple-500 rounded-full"></span>
+                                Full Proposal Details
+                            </h2>
 
-                    <div className="mt-8 pt-8 border-t border-zinc-100 dark:border-zinc-800 flex flex-wrap gap-2">
-                        {proposal.tags?.map((tag: string) => (
-                            <span key={tag} className="px-3 py-1 bg-zinc-100 dark:bg-zinc-800 rounded-lg text-sm text-zinc-600 dark:text-zinc-400 font-medium flex items-center gap-1">
-                                <Tag className="w-3 h-3" /> {tag}
-                            </span>
-                        ))}
+                            {proposal.content ? (
+                                <div
+                                    className="prose dark:prose-invert max-w-none prose-lg prose-headings:font-bold prose-headings:tracking-tight prose-p:text-zinc-600 dark:prose-p:text-zinc-300 prose-a:text-green-700"
+                                    dangerouslySetInnerHTML={{ __html: proposal.content }}
+                                />
+                            ) : (
+                                <p className="text-zinc-500 italic">No additional details provided.</p>
+                            )}
+                        </section>
+                    </div>
+
+                    <div className="space-y-6">
+                        {/* Meta Sidebar */}
+                        <div className="bg-white dark:bg-zinc-900 rounded-3xl p-6 border border-zinc-200 dark:border-zinc-800 shadow-sm sticky top-36">
+                            <h3 className="font-bold text-zinc-900 dark:text-white mb-4">Proposal Metadata</h3>
+
+                            <div className="space-y-4">
+                                <div>
+                                    <label className="text-xs font-semibold text-zinc-400 uppercase tracking-wider block mb-1">Status</label>
+                                    <div className="inline-flex">
+                                        <span className={clsx(
+                                            "px-3 py-1 rounded-full text-sm font-bold flex items-center gap-2",
+                                            proposal.status === "Proposed" && "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400",
+                                            proposal.status === "Under Review" && "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400",
+                                            proposal.status === "Approved" && "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
+                                            proposal.status === "Removed" && "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",
+                                        )}>
+                                            {proposal.status}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label className="text-xs font-semibold text-zinc-400 uppercase tracking-wider block mb-1">Category</label>
+                                    <span className="font-medium text-zinc-900 dark:text-white">{proposal.category}</span>
+                                </div>
+
+                                <div>
+                                    <label className="text-xs font-semibold text-zinc-400 uppercase tracking-wider block mb-1">Posted Date</label>
+                                    <div className="flex items-center gap-2 text-zinc-600 dark:text-zinc-300">
+                                        <Calendar className="w-4 h-4" />
+                                        <span>{new Date(proposal.created_at).toLocaleDateString(undefined, { dateStyle: 'long' })}</span>
+                                    </div>
+                                </div>
+
+                                {proposal.tags && proposal.tags.length > 0 && (
+                                    <div>
+                                        <label className="text-xs font-semibold text-zinc-400 uppercase tracking-wider block mb-2">Tags</label>
+                                        <div className="flex flex-wrap gap-2">
+                                            {proposal.tags.map((tag: string) => (
+                                                <span key={tag} className="px-2 py-1 bg-zinc-100 dark:bg-zinc-800 rounded-md text-xs text-zinc-600 dark:text-zinc-400 font-medium">
+                                                    #{tag}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 {/* Comments Section */}
                 {proposal.status !== "Removed" && !proposal.is_deleted ? (
-                    <CommentSection
-                        proposalId={proposal.id}
-                        comments={proposal.comments}
-                        currentUser={user}
-                        isAdmin={isAdmin}
-                    />
+                    <div className="max-w-4xl">
+                        <CommentSection
+                            proposalId={proposal.id}
+                            comments={proposal.comments}
+                            currentUser={user}
+                            isAdmin={isAdmin}
+                        />
+                    </div>
                 ) : (
-                    <div className="bg-zinc-100 dark:bg-zinc-900/50 p-6 rounded-3xl text-center border border-zinc-200 dark:border-zinc-800 text-zinc-500 italic">
+                    <div className="bg-zinc-100 dark:bg-zinc-900/50 p-6 rounded-3xl text-center border border-zinc-200 dark:border-zinc-800 text-zinc-500 italic max-w-4xl">
                         Comments have been disabled for this proposal.
                     </div>
                 )}

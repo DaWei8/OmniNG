@@ -34,6 +34,7 @@ export async function getProposals(category = "All", search = "") {
         summary: p.summary,
         category: p.category,
         status: p.status,
+        removalReason: p.removal_reason,
         date: new Date(p.created_at).toLocaleDateString(),
         author: p.profiles?.full_name || "Citizen",
         upvotes: p.votes?.length || 0,

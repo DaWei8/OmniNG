@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { NewsCategory, NewsItem } from '@/data/newsData';
-import { getNews } from '@/actions/news';
+import { getNews, getLatestNews24h } from '@/actions/news';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Calendar, Clock, Globe, Shield, TrendingUp, Landmark, Zap, BookOpen } from 'lucide-react';
 import clsx from 'clsx';
@@ -43,8 +43,17 @@ export const categoryIcons: Record<NewsCategory, any> = {
 export default function NewsPage() {
     const [activeCategory, setActiveCategory] = useState<NewsCategory | 'All'>('All');
     const [searchQuery, setSearchQuery] = useState('');
-    const [newsItems, setNewsItems] = useState<NewsItem[]>([]);
+    const [items, setNewsItems] = useState<NewsItem[]>([]);
+    const [latestNews, setLatestNews] = useState<NewsItem[]>([]);
     const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchLatest = async () => {
+            const latest = await getLatestNews24h();
+            setLatestNews(latest);
+        };
+        fetchLatest();
+    }, []);
 
     useEffect(() => {
         let mounted = true;
@@ -67,14 +76,14 @@ export default function NewsPage() {
     }, [activeCategory, searchQuery]);
 
     const [currentPage, setCurrentPage] = useState(1);
-    const ITEMS_PER_PAGE = 30;
+    const ITEMS_PER_PAGE = 12;
 
     useEffect(() => {
         setCurrentPage(1);
     }, [activeCategory, searchQuery]);
 
-    const totalPages = Math.ceil(newsItems.length / ITEMS_PER_PAGE);
-    const paginatedNews = newsItems.slice(
+    const totalPages = Math.ceil(items.length / ITEMS_PER_PAGE);
+    const paginatedNews = items.slice(
         (currentPage - 1) * ITEMS_PER_PAGE,
         currentPage * ITEMS_PER_PAGE
     );
@@ -137,6 +146,41 @@ export default function NewsPage() {
                     </div>
                 ) : (
                     <>
+                        {/* Latest News Section (24h) */}
+                        {latestNews.length > 0 && !searchQuery && activeCategory === 'All' && currentPage === 1 && (
+                            <div className="mb-12">
+                                <div className="flex items-center gap-3 mb-6">
+                                    <span className="relative flex h-3 w-3">
+                                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                                        <span className="relative inline-flex rounded-full h-3 w-3 bg-red-600"></span>
+                                    </span>
+                                    <h2 className="text-2xl font-bold text-zinc-900 dark:text-white">
+                                        Just In <span className="text-zinc-500 text-base font-normal ml-1">(Last 24 Hours)</span>
+                                    </h2>
+                                </div>
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                    {latestNews.slice(0, 4).map((item) => (
+                                        <Link href={`/news/${item.title.replace(/%/g, 'pcnt')}`} key={item.id}>
+                                            <div className="group bg-white dark:bg-zinc-800/50 border border-green-200 dark:border-zinc-800 p-4 rounded-xl hover:border-green-500/50 transition-all h-full flex flex-col">
+                                                <span className="text-[10px] font-bold text-green-600 dark:text-green-400 uppercase tracking-wider mb-2">
+                                                    {item.category}
+                                                </span>
+                                                <h3 className="font-bold text-lg text-zinc-900 dark:text-white line-clamp-2 mb-2 group-hover:text-green-600 transition-colors">
+                                                    {item.title}
+                                                </h3>
+                                                <div className="mt-auto flex items-center gap-2 text-[10px] text-zinc-500">
+                                                    <Clock className="w-3 h-3" />
+                                                    {/* Calculate time ago roughly if needed, or just show Time */}
+                                                    <span>Today</span>
+                                                </div>
+                                            </div>
+                                        </Link>
+                                    ))}
+                                </div>
+                                <div className="w-full h-px bg-zinc-200 dark:bg-zinc-800 my-8" />
+                            </div>
+                        )}
+
                         {/* News Grid */}
                         <motion.div
                             layout
@@ -167,13 +211,17 @@ export default function NewsPage() {
                                                     </div>
                                                 </div>
 
-                                                <h3 className="text-xl font-bold text-zinc-900 dark:text-white mb-3 leading-tight group-hover:text-green-700 dark:group-hover:text-green-700 transition-colors">
+                                                <h3 className="text-xl font-bold text-zinc-900 dark:text-white mb-3 line-clamp-2 leading-tight group-hover:text-green-700 dark:group-hover:text-green-700 transition-colors">
                                                     {item.title}
                                                 </h3>
 
                                                 <p className="text-zinc-600 dark:text-zinc-400 line-clamp-3 text-sm leading-relaxed mb-6 grow">
                                                     {item.summary}
                                                 </p>
+
+                                                <button className="font-medium cursor-pointer text-sm w-full text-left text-zinc-900 dark:text-white mb-3 line-clamp-2 leading-tight group-hover:text-green-700 dark:group-hover:text-green-700 transition-colors">
+                                                    Read more
+                                                </button>
 
                                                 <div className="mt-auto pt-4 border-t border-zinc-100 dark:border-zinc-800 flex items-center justify-between text-xs text-zinc-500 font-medium">
                                                     <div className="flex items-center gap-2">
@@ -198,7 +246,7 @@ export default function NewsPage() {
                             onPageChange={setCurrentPage}
                         />
 
-                        {newsItems.length === 0 && (
+                        {items.length === 0 && (
                             <div className="text-center py-20">
                                 <p className="text-zinc-500 text-lg">No news found matching your criteria.</p>
                             </div>

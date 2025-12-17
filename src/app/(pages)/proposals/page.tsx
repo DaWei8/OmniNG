@@ -10,6 +10,9 @@ export default async function ProposalsPage({ searchParams }: { searchParams: Pr
     const { q, category } = await searchParams;
     const proposals = await getProposals(category || "All", q || "");
 
+    const activeProposals = proposals.filter((p: any) => p.status !== "Removed");
+    const removedProposals = proposals.filter((p: any) => p.status === "Removed");
+
     return (
         <div className="min-h-screen bg-zinc-50 dark:bg-black pb-16">
             {/* Hero Header */}
@@ -39,10 +42,10 @@ export default async function ProposalsPage({ searchParams }: { searchParams: Pr
                         <span className="bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 text-xs font-bold px-2 py-1 rounded-full uppercase tracking-wider">Top 3</span>
                     </div>
                     <div className="grid gap-4">
-                        {[...proposals].sort((a, b) => b.upvotes - a.upvotes).slice(0, 3).map((proposal, i) => (
-                            proposal.status === "Removed" ? null : <ProposalCard key={proposal.id} proposal={proposal} />
+                        {[...activeProposals].sort((a: any, b: any) => b.upvotes - a.upvotes).slice(0, 3).map((proposal: any, i: number) => (
+                            <ProposalCard key={proposal.id} proposal={proposal} />
                         ))}
-                        {proposals.length === 0 && (
+                        {activeProposals.length === 0 && (
                             <div className="text-zinc-500 italic p-4">No proposals yet.</div>
                         )}
                     </div>
@@ -93,8 +96,8 @@ export default async function ProposalsPage({ searchParams }: { searchParams: Pr
                         <div className="mb-4">
                             <h4 className="text-sm text-zinc-500 mb-1">Topic Discussed</h4>
                             <p className="font-bold text-zinc-900 dark:text-white line-clamp-2">
-                                {proposals.length > 0
-                                    ? [...proposals].sort((a, b) => b.upvotes - a.upvotes)[0].title
+                                {activeProposals.length > 0
+                                    ? [...activeProposals].sort((a: any, b: any) => b.upvotes - a.upvotes)[0].title
                                     : "Community Guidelines & Future Roadmap"}
                             </p>
                         </div>
@@ -111,7 +114,45 @@ export default async function ProposalsPage({ searchParams }: { searchParams: Pr
             <div className="flex items-center max-w-5xl xl:max-w-7xl px-5 mx-auto justify-between mb-8">
                 <h2 className="text-2xl font-bold text-zinc-900 dark:text-white">All Proposals</h2>
             </div>
-            <ProposalList proposals={proposals} />
+
+            <div className="mb-20">
+                <ProposalList proposals={activeProposals} />
+            </div>
+
+            {/* Removed Proposals Section */}
+            {removedProposals.length > 0 && (
+                <div className="max-w-5xl xl:max-w-7xl px-5 mx-auto border-t border-zinc-200 dark:border-zinc-800 pt-16">
+                    <div className="mb-8">
+                        <h2 className="text-2xl font-bold text-zinc-900 dark:text-white flex items-center gap-2">
+                            <span className="w-2 h-8 bg-red-600 rounded-lg"></span>
+                            Removed Proposals
+                        </h2>
+                        <p className="text-zinc-500 mt-2">These proposals were removed for violating community guidelines. Transparency is key to our governance.</p>
+                    </div>
+
+                    <div className="grid gap-4 opacity-75 grayscale hover:grayscale-0 transition-all duration-500">
+                        {removedProposals.map((proposal: any) => (
+                            <div key={proposal.id} className="bg-red-50/50 dark:bg-red-900/10 border border-red-100 dark:border-red-900/30 p-6 rounded-2xl flex flex-col md:flex-row md:items-start gap-6">
+                                <div className="flex-1">
+                                    <h3 className="font-bold text-lg text-zinc-900 dark:text-white mb-2 decoration-red-500 decoration-2 underline-offset-4 line-through decoration-wavy opacity-70">{proposal.title}</h3>
+                                    <p className="text-sm text-zinc-500 line-clamp-2 mb-4 italic">{proposal.summary}</p>
+
+                                    <div className="bg-white dark:bg-zinc-900 p-4 rounded-xl border border-red-200 dark:border-red-900/50">
+                                        <p className="text-xs font-bold text-red-600 dark:text-red-400 mb-1 uppercase tracking-wider">Removal Reason</p>
+                                        <p className="text-sm text-zinc-700 dark:text-zinc-300">
+                                            {proposal.removalReason || "Violation of community standards relating to civil discourse."}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className="flex items-center gap-4 text-xs font-medium text-zinc-400 md:flex-col md:items-end md:justify-center">
+                                    <span className="px-3 py-1 bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300 rounded-full">Removed</span>
+                                    <span>{proposal.date}</span>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

@@ -16,7 +16,7 @@ export default function PaginationControl({ currentPage, totalPages, onPageChang
             <button
                 onClick={() => onPageChange(currentPage - 1)}
                 disabled={currentPage === 1}
-                className="p-2 rounded-lg border border-zinc-200 dark:border-zinc-800 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+                className="p-2 rounded-lg border cursor-pointer border-zinc-200 dark:border-zinc-800 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
                 aria-label="Previous Page"
             >
                 <ChevronLeft className="w-5 h-5 text-zinc-600 dark:text-zinc-400" />
@@ -29,7 +29,7 @@ export default function PaginationControl({ currentPage, totalPages, onPageChang
             <button
                 onClick={() => onPageChange(currentPage + 1)}
                 disabled={currentPage === totalPages}
-                className="p-2 rounded-lg border border-zinc-200 dark:border-zinc-800 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+                className="p-2 rounded-lg border cursor-pointer border-zinc-200 dark:border-zinc-800 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
                 aria-label="Next Page"
             >
                 <ChevronRight className="w-5 h-5 text-zinc-600 dark:text-zinc-400" />

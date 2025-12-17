@@ -30,7 +30,7 @@ export default function RelatedNewsCard({ related }: { related: any }) {
     const Icon = categoryIcons[related.category as NewsCategory] || BookOpen;
 
     return (
-        <Link href={`/news/${related.title.replace(/%/g, '#pcnt#')}`} className="block h-full">
+        <Link href={`/news/${related.title.replace(/%/g, 'pcnt')}`} className="block h-full">
             <motion.div
                 layout
                 initial={{ opacity: 0, scale: 0.9 }}
@@ -51,12 +51,15 @@ export default function RelatedNewsCard({ related }: { related: any }) {
                     </div>
                 </div>
 
-                <h3 className="text-xl font-bold text-zinc-900 dark:text-white mb-3 leading-tight group-hover:text-green-700 dark:group-hover:text-green-700 transition-colors">
+                <h3 className="text-xl font-bold text-zinc-900 line-clamp-2 dark:text-white mb-3 leading-tight group-hover:text-green-700 dark:group-hover:text-green-700 transition-colors">
                     {related.title}
                 </h3>
 
-                <p className="text-zinc-600 dark:text-zinc-400 text-sm leading-relaxed mb-6 grow">
+                <p className="text-zinc-600 dark:text-zinc-400 text-sm line-clamp-3 leading-relaxed mb-6 grow">
                     {related.summary}
+                </p>
+                <p className="text-green-700 mb-4 dark:text-green-700 hover:underline">
+                    Read More
                 </p>
 
                 <div className="mt-auto pt-4 border-t border-zinc-100 dark:border-zinc-800 flex items-center justify-between text-xs text-zinc-500 font-medium">

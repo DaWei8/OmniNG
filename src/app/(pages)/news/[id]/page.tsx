@@ -68,7 +68,7 @@ export default async function NewsDetailPage({ params }: PageProps) {
 
                 {/* Content Body */}
                 <div className="prose max-w-3xl prose-zinc dark:prose-invert prose-lg mb-16">
-                    <p className="lead text-xl border-l-2 border-green-700 text-zinc-600 dark:text-zinc-300 font-medium">
+                    <p className="lead text-lg border-l-4 pl-4 border-green-700 text-zinc-600 dark:text-zinc-300 font-light italic">
                         {newsItem.summary}
                     </p>
                     <hr className="my-8 border-zinc-100 dark:border-zinc-800" />

@@ -10,7 +10,7 @@ export async function getNews(category = "All", search = "") {
         let { data: news, error } = await supabase
             .from("news")
             .select("*")
-            .order("published_at", { ascending: false });
+            .order("published_at", { ascending: true });
 
         if (error) {
             console.error("Supabase error fetching news:", error);
@@ -130,6 +130,46 @@ export async function getNewsByCategory(category: string, limit: number = 3) {
 
     } catch (e) {
         console.error(`Error fetching news for category ${category}:`, e);
+        return [];
+    }
+}
+
+export async function getLatestNews24h() {
+    const supabase = await createClient();
+
+    try {
+        const oneDayAgo = new Date();
+        oneDayAgo.setHours(oneDayAgo.getHours() - 24);
+
+        const { data: news, error } = await supabase
+            .from("news")
+            .select("*")
+            .gte("created_at", oneDayAgo.toISOString())
+            .order("created_at", { ascending: false });
+
+        if (error) {
+            console.error("Supabase error fetching latest news:", error);
+            throw new Error(error.message);
+        }
+
+        if (!news || news.length === 0) {
+            return [];
+        }
+
+        return news.map((item: any) => ({
+            id: item.id,
+            title: item.title,
+            summary: item.summary,
+            category: item.category,
+            source: item.source || "Whathappening",
+            date: item.created_at ? new Date(item.created_at).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+            imageUrl: item.image_url,
+            readTime: item.read_time || "5 min read",
+            author: item.author || "Editor"
+        }));
+
+    } catch (e) {
+        console.error("Error fetching latest news:", e);
         return [];
     }
 }

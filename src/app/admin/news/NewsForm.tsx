@@ -139,7 +139,7 @@ export default function NewsForm({ initialData, onSuccess, onCancel }: { initial
                         onChange={(e) => setFormData({ ...formData, summary: e.target.value })}
                         rows={2}
                         required
-                        className="w-full px-4 py-2 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-transparent focus:ring-2 focus:ring-green-500 outline-none resize-none"
+                        className="w-full px-4 py-2 rounded-lg border h-32 border-zinc-200 dark:border-zinc-700 bg-transparent focus:ring-2 focus:ring-green-500 outline-none resize-none"
                         placeholder="Brief overview..."
                     />
                 </div>
@@ -166,7 +166,7 @@ export default function NewsForm({ initialData, onSuccess, onCancel }: { initial
                 <button
                     type="submit"
                     disabled={loading}
-                    className="flex-1 bg-green-600 hover:bg-green-700 text-white font-medium py-3 rounded-lg flex items-center justify-center gap-2 transition-colors disabled:opacity-50"
+                    className="flex-1 bg-green-700 hover:bg-green-800 cursor-pointer text-white font-medium py-3 rounded-lg flex items-center justify-center gap-2 transition-colors disabled:opacity-50"
                 >
                     {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : initialData ? "Update News" : "Publish News"}
                 </button>

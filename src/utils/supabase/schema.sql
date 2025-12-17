@@ -35,7 +35,8 @@ create table proposals (
   problem_solution text, 
   tags text[],
   category text not null,
-  status text check (status in ('Proposed', 'Under Review', 'Adopted', 'Rejected')) default 'Proposed',
+  status text check (status in ('Proposed', 'Under Review', 'Adopted', 'Approved', 'Rejected', 'Removed')) default 'Proposed',
+  removal_reason text,
   created_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
 
