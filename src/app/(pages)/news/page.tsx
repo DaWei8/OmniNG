@@ -171,7 +171,7 @@ export default function NewsPage() {
                                                     {item.title}
                                                 </h3>
 
-                                                <p className="text-zinc-600 dark:text-zinc-400 text-sm leading-relaxed mb-6 grow">
+                                                <p className="text-zinc-600 dark:text-zinc-400 line-clamp-3 text-sm leading-relaxed mb-6 grow">
                                                     {item.summary}
                                                 </p>
 

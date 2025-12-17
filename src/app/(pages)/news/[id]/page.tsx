@@ -68,34 +68,12 @@ export default async function NewsDetailPage({ params }: PageProps) {
 
                 {/* Content Body */}
                 <div className="prose max-w-3xl prose-zinc dark:prose-invert prose-lg mb-16">
-                    <p className="lead text-xl text-zinc-600 dark:text-zinc-300 font-medium">
+                    <p className="lead text-xl border-l-2 border-green-700 text-zinc-600 dark:text-zinc-300 font-medium">
                         {newsItem.summary}
                     </p>
                     <hr className="my-8 border-zinc-100 dark:border-zinc-800" />
 
-                    {newsItem.content ? (
-                        <div dangerouslySetInnerHTML={{ __html: newsItem.content }} />
-                    ) : (
-                        // Mock Body Content generator if empty
-                        <div className="space-y-6 text-zinc-700 dark:text-zinc-300">
-                            <p>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                            </p>
-                            <p>
-                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                            </p>
-                            <h3 className="text-2xl font-bold text-zinc-900 dark:text-white mt-8 mb-4">Impact on the Region</h3>
-                            <p>
-                                Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit.
-                            </p>
-                            <blockquote className="border-l-4 border-green-700 pl-4 italic my-8 text-zinc-600 dark:text-zinc-400">
-                                "This development marks a significant turning point for the sector, promising renewed growth and stability for the coming fiscal year."
-                            </blockquote>
-                            <p>
-                                Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.
-                            </p>
-                        </div>
-                    )}
+                    {newsItem.content && <div dangerouslySetInnerHTML={{ __html: newsItem.content }} />}
                 </div>
 
                 {/* Related News */}
