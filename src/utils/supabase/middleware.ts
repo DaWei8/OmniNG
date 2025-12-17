@@ -28,7 +28,14 @@ export const createClient = async (request: NextRequest) => {
 
   // IMPORTANT: DO NOT REMOVE auth.getUser()
   // This refreshes the session if needed.
-  await supabase.auth.getUser();
+  const { error } = await supabase.auth.getUser();
+
+  // If we encounter a refresh token error, we typically want to clear the session so the user
+  // isn't stuck in a loop with a bad token.
+  if (error && (error.code === 'refresh_token_already_used' || error.message.includes('Already Used'))) {
+    console.warn("Detected invalid refresh token. Clearing session.");
+    await supabase.auth.signOut();
+  }
 
   return supabaseResponse;
 };

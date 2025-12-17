@@ -10,7 +10,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <div className="font-funnel relative w-screen max-w-screen bg-white dark:bg-gray-950 min-h-screen antialiased">
+    <div className="font-funnel relative max-w-screen bg-white dark:bg-gray-950 min-h-screen antialiased">
       <AuthProvider>
         <Suspense fallback={null}>
           <Navbar />

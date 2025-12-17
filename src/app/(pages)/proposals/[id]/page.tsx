@@ -57,13 +57,13 @@ export default async function ProposalDetailPage({ params }: { params: { id: str
                             "px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider flex items-center gap-1",
                             proposal.status === "Proposed" && "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400",
                             proposal.status === "Under Review" && "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400",
-                            proposal.status === "Adopted" && "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
-                            proposal.status === "Rejected" && "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",
+                            proposal.status === "Approved" && "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
+                            proposal.status === "Removed" && "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",
                         )}>
                             {proposal.status === "Proposed" && <AlertCircle className="w-3 h-3" />}
                             {proposal.status === "Under Review" && <Clock className="w-3 h-3" />}
-                            {proposal.status === "Adopted" && <CheckCircle className="w-3 h-3" />}
-                            {proposal.status === "Rejected" && <XCircle className="w-3 h-3" />}
+                            {proposal.status === "Approved" && <CheckCircle className="w-3 h-3" />}
+                            {proposal.status === "Removed" && <XCircle className="w-3 h-3" />}
                             {proposal.status}
                         </span>
                         <span className="text-zinc-400">•</span>
@@ -126,12 +126,18 @@ export default async function ProposalDetailPage({ params }: { params: { id: str
                 </div>
 
                 {/* Comments Section */}
-                <CommentSection
-                    proposalId={proposal.id}
-                    comments={proposal.comments}
-                    currentUser={user}
-                    isAdmin={isAdmin}
-                />
+                {proposal.status !== "Removed" && !proposal.is_deleted ? (
+                    <CommentSection
+                        proposalId={proposal.id}
+                        comments={proposal.comments}
+                        currentUser={user}
+                        isAdmin={isAdmin}
+                    />
+                ) : (
+                    <div className="bg-zinc-100 dark:bg-zinc-900/50 p-6 rounded-3xl text-center border border-zinc-200 dark:border-zinc-800 text-zinc-500 italic">
+                        Comments have been disabled for this proposal.
+                    </div>
+                )}
             </main>
         </div>
     );

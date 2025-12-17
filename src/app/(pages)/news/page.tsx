@@ -18,8 +18,6 @@ export const categories: (NewsCategory | 'All')[] = [
     'Technology',
     'Security',
     'Religious',
-    'Sports',
-    'Entertainment'
 ];
 
 export const categoryColors: Record<NewsCategory, string> = {
@@ -30,8 +28,6 @@ export const categoryColors: Record<NewsCategory, string> = {
     'Technology': 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300',
     'Security': 'bg-zinc-100 text-zinc-900 dark:bg-zinc-700 dark:text-zinc-100',
     'Religious': 'bg-cyan-100 text-cyan-700 dark:bg-cyan-900/30 dark:text-cyan-300',
-    'Sports': 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300',
-    'Entertainment': 'bg-pink-100 text-pink-700 dark:bg-pink-900/30 dark:text-pink-300',
 };
 
 export const categoryIcons: Record<NewsCategory, any> = {
@@ -42,8 +38,6 @@ export const categoryIcons: Record<NewsCategory, any> = {
     'Technology': Zap,
     'Security': Shield,
     'Religious': BookOpen,
-    'Sports': Zap,
-    'Entertainment': Zap,
 };
 
 export default function NewsPage() {

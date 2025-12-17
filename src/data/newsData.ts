@@ -6,8 +6,6 @@ export type NewsCategory =
     | 'Technology'
     | 'Security'
     | 'Religious'
-    | 'Sports'
-    | 'Entertainment';
 
 export interface NewsItem {
     id: string;

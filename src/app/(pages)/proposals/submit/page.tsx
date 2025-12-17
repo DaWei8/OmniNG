@@ -106,6 +106,17 @@ export default function SubmitProposalPage() {
                             </div>
 
                             <div>
+                                <label className="block text-sm font-bold mb-2">How it solves the problem</label>
+                                <p className="text-xs text-zinc-500 mb-2">Explain the impact and effectiveness of this solution.</p>
+                                <textarea
+                                    name="problem_solution"
+                                    required
+                                    className="w-full bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl px-4 py-3 focus:ring-2 focus:ring-green-700 outline-none transition-all min-h-[120px] resize-none"
+                                    placeholder="Explain how this proposal solves the problem..."
+                                />
+                            </div>
+
+                            <div>
                                 <label className="block text-sm font-bold mb-2">Full Proposal Details</label>
                                 <RichEditor
                                     content={content}
